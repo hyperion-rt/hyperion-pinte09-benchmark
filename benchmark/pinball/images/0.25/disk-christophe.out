@@ -1,0 +1,273 @@
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]: executable = parallel (using MPI)
+17:00:37:[0]: processes  = [0] to [15]
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]: starting [0] on `localhost'
+17:00:37:[0]: starting [1] on `localhost'
+17:00:37:[0]: starting [2] on `localhost'
+17:00:37:[0]: starting [3] on `localhost'
+17:00:37:[0]: starting [4] on `localhost'
+17:00:37:[0]: starting [5] on `localhost'
+17:00:37:[0]: starting [6] on `localhost'
+17:00:37:[0]: starting [7] on `localhost'
+17:00:37:[0]: starting [8] on `localhost'
+17:00:37:[0]: starting [9] on `localhost'
+17:00:37:[0]: starting [10] on `localhost'
+17:00:37:[0]: starting [11] on `localhost'
+17:00:37:[0]: starting [12] on `localhost'
+17:00:37:[0]: starting [13] on `localhost'
+17:00:37:[0]: starting [14] on `localhost'
+17:00:37:[0]: starting [15] on `localhost'
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]: This is `pinball' version 5.12.
+17:00:37:[0]: Copyright (C) 1993 to 2001 Alan M. Watson.
+17:00:37:[0]: See the file `README' for copying conditions.
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]:                  mean_tau = 1          (default)
+17:00:37:[0]:       forced_interactions = 2          
+17:00:37:[0]:           forced_scatters = 2          
+17:00:37:[0]:            forced_escapes = 1          (default)
+17:00:37:[0]:        azimuthal_symmetry = 3          
+17:00:37:[0]:       equatorial_symmetry = 1          
+17:00:37:[0]:           chiral_symmetry = 1          
+17:00:37:[0]:        characteristic_tau = 1          (default)
+17:00:37:[0]:      fractional_tolerance = 1e-4       (default)
+17:00:37:[0]:        absolute_tolerance = 1e-8       (default)
+17:00:37:[0]:                  dl_midpt = 1e-3       
+17:00:37:[0]:       step_cpu_time_limit = 1          (default)
+17:00:37:[0]:            sobol_deviates = 40         (default)
+17:00:37:[0]:                      seed = 0          (default)
+17:00:37:[0]:                N_scatters = 1          (default)
+17:00:37:[0]:                 object_pa = 0          (default)
+17:00:37:[0]:                   delta_x = 3.5857     
+17:00:37:[0]:                       psf =            (default)
+17:00:37:[0]:           r_pseudo_direct = 0          (default)
+17:00:37:[0]:                   delta_r = 0          (default)
+17:00:37:[0]:                   delta_z = 0          (default)
+17:00:37:[0]:                     z_min = -1         (default)
+17:00:37:[0]:                     z_max = 0          (default)
+17:00:37:[0]:             delta_log10_z = 0          (default)
+17:00:37:[0]:               log10_z_min = -6         (default)
+17:00:37:[0]:               log10_z_max = 0          (default)
+17:00:37:[0]:             delta_log10_r = 0          (default)
+17:00:37:[0]:               log10_r_min = -6         (default)
+17:00:37:[0]:               log10_r_max = 0          (default)
+17:00:37:[0]:            cpu_time_limit = 2000       
+17:00:37:[0]:           real_time_limit = 0          (default)
+17:00:37:[0]:             emitted_limit = 0          (default)
+17:00:37:[0]:     notification_fraction = 0.1        (default)
+17:00:37:[0]:        emitted_group_size = 100        (default)
+17:00:37:[0]:                nice_level = 20         (default)
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]: Christophe dust
+17:00:37:[0]:                     kappa = 4752.16    
+17:00:37:[0]:                         a = 0.6474786  
+17:00:37:[0]:                         g = 6.29642e-01
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]: model: non-axisymmetric disk around a single star with spots
+17:00:37:[0]:         observer_altitude = 14.478     
+17:00:37:[0]:          observer_azimuth = 0          (default)
+17:00:37:[0]:           direct_fraction = 0.1        (default)
+17:00:37:[0]:                     R_max = 500        
+17:00:37:[0]:                    r_star = 2          
+17:00:37:[0]:                     r_min = 0.1        
+17:00:37:[0]:                     r_max = 400        
+17:00:37:[0]:                       r_0 = 100        
+17:00:37:[0]:                       H_0 = 10         
+17:00:37:[0]:                     alpha = -2.625     
+17:00:37:[0]:                      beta = 1.125      
+17:00:37:[0]:                         p = -1.500     (derived)
+17:00:37:[0]:                         M = 3e-5       
+17:00:37:[0]:                     rho_0 = 2.8744e-18 (derived)
+17:00:37:[0]:              shadow_angle = 0          (default)
+17:00:37:[0]:           shadow_symmetry = p          (default)
+17:00:37:[0]:              shadow_r_min = 0          (default)
+17:00:37:[0]:              shadow_r_max = 2          (default)
+17:00:37:[0]:           shadow_H_factor = 2          (default)
+17:00:37:[0]:         upper_spot_radius = 20         (default)
+17:00:37:[0]:         lower_spot_radius = 20         (default)
+17:00:37:[0]:       upper_spot_altitude = +65        (default)
+17:00:37:[0]:       lower_spot_altitude = -65        (default)
+17:00:37:[0]:        upper_spot_azimuth = 0          (default)
+17:00:37:[0]:        lower_spot_azimuth = 180        (default)
+17:00:37:[0]:     upper_spot_brightness = 1          (default)
+17:00:37:[0]:     lower_spot_brightness = 1          (default)
+17:00:37:[0]: ------------------------------------------------
+17:00:37:[0]:                  tau_star = 9.512e+00  (derived)
+17:00:37:[0]:                    A_star = 8.750e+00  (derived)
+17:00:37:[0]: ------------------------------------------------
+17:14:01:[0]: cpu time =  200.1 ; emitted = 208300
+17:27:21:[0]: cpu time =  400.1 ; emitted = 415800
+17:40:45:[0]: cpu time =  600.0 ; emitted = 623500
+17:54:12:[0]: cpu time =  800.1 ; emitted = 831300
+18:07:38:[0]: cpu time = 1000.0 ; emitted = 1038700
+18:21:06:[0]: cpu time = 1200.1 ; emitted = 1246100
+18:34:35:[0]: cpu time = 1400.1 ; emitted = 1453400
+18:48:04:[0]: cpu time = 1600.0 ; emitted = 1661100
+19:01:31:[0]: cpu time = 1800.0 ; emitted = 1868700
+19:14:56:[0]: cpu time = 2000.0 ; emitted = 2076700
+19:14:56:[0]: ------------------------------------------------
+19:15:04:[0]: integrate calls       [0] = 21.5      
+19:15:04:[0]: integrate calls       [1] = 21.5      
+19:15:04:[0]: integrate calls       [2] = 21.4      
+19:15:04:[0]: integrate calls       [3] = 21.5      
+19:15:04:[0]: integrate calls       [4] = 21.5      
+19:15:04:[0]: integrate calls       [5] = 21.5      
+19:15:04:[0]: integrate calls       [6] = 21.5      
+19:15:04:[0]: integrate calls       [7] = 21.5      
+19:15:04:[0]: integrate calls       [8] = 21.5      
+19:15:04:[0]: integrate calls       [9] = 21.5      
+19:15:04:[0]: integrate calls       [10] = 21.4      
+19:15:04:[0]: integrate calls       [11] = 21.4      
+19:15:04:[0]: integrate calls       [12] = 21.5      
+19:15:04:[0]: integrate calls       [13] = 21.5      
+19:15:04:[0]: integrate calls       [14] = 21.5      
+19:15:04:[0]: integrate calls       [15] = 21.4      
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: chi calls             [0] = 164.5     
+19:15:04:[0]: chi calls             [1] = 164.5     
+19:15:04:[0]: chi calls             [2] = 164.5     
+19:15:04:[0]: chi calls             [3] = 164.5     
+19:15:04:[0]: chi calls             [4] = 164.5     
+19:15:04:[0]: chi calls             [5] = 164.5     
+19:15:04:[0]: chi calls             [6] = 164.5     
+19:15:04:[0]: chi calls             [7] = 164.5     
+19:15:04:[0]: chi calls             [8] = 164.5     
+19:15:04:[0]: chi calls             [9] = 164.5     
+19:15:04:[0]: chi calls             [10] = 164.5     
+19:15:04:[0]: chi calls             [11] = 164.5     
+19:15:04:[0]: chi calls             [12] = 164.6     
+19:15:04:[0]: chi calls             [13] = 164.5     
+19:15:04:[0]: chi calls             [14] = 164.5     
+19:15:04:[0]: chi calls             [15] = 164.5     
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: cpu time              [0] = 2000.0    
+19:15:04:[0]: cpu time              [1] = 2000.0    
+19:15:04:[0]: cpu time              [2] = 2000.1    
+19:15:04:[0]: cpu time              [3] = 2000.0    
+19:15:04:[0]: cpu time              [4] = 2000.0    
+19:15:04:[0]: cpu time              [5] = 2000.1    
+19:15:04:[0]: cpu time              [6] = 2000.1    
+19:15:04:[0]: cpu time              [7] = 2000.0    
+19:15:04:[0]: cpu time              [8] = 2000.0    
+19:15:04:[0]: cpu time              [9] = 2000.1    
+19:15:04:[0]: cpu time              [10] = 2000.1    
+19:15:04:[0]: cpu time              [11] = 2000.1    
+19:15:04:[0]: cpu time              [12] = 2000.0    
+19:15:04:[0]: cpu time              [13] = 2000.1    
+19:15:04:[0]: cpu time              [14] = 2000.1    
+19:15:04:[0]: cpu time              [15] = 2000.0    
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: real time             [0] = 8058.6    
+19:15:04:[0]: real time             [1] = 8063.8    
+19:15:04:[0]: real time             [2] = 8065.2    
+19:15:04:[0]: real time             [3] = 8062.6    
+19:15:04:[0]: real time             [4] = 8062.9    
+19:15:04:[0]: real time             [5] = 8066.6    
+19:15:04:[0]: real time             [6] = 8061.7    
+19:15:04:[0]: real time             [7] = 8062.0    
+19:15:04:[0]: real time             [8] = 8063.7    
+19:15:04:[0]: real time             [9] = 8061.8    
+19:15:04:[0]: real time             [10] = 8062.8    
+19:15:04:[0]: real time             [11] = 8065.7    
+19:15:04:[0]: real time             [12] = 8054.3    
+19:15:04:[0]: real time             [13] = 8059.9    
+19:15:04:[0]: real time             [14] = 8063.3    
+19:15:04:[0]: real time             [15] = 8062.8    
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: efficiency            [0] = 0.25      
+19:15:04:[0]: efficiency            [1] = 0.25      
+19:15:04:[0]: efficiency            [2] = 0.25      
+19:15:04:[0]: efficiency            [3] = 0.25      
+19:15:04:[0]: efficiency            [4] = 0.25      
+19:15:04:[0]: efficiency            [5] = 0.25      
+19:15:04:[0]: efficiency            [6] = 0.25      
+19:15:04:[0]: efficiency            [7] = 0.25      
+19:15:04:[0]: efficiency            [8] = 0.25      
+19:15:04:[0]: efficiency            [9] = 0.25      
+19:15:04:[0]: efficiency            [10] = 0.25      
+19:15:04:[0]: efficiency            [11] = 0.25      
+19:15:04:[0]: efficiency            [12] = 0.25      
+19:15:04:[0]: efficiency            [13] = 0.25      
+19:15:04:[0]: efficiency            [14] = 0.25      
+19:15:04:[0]: efficiency            [15] = 0.25      
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: cpu time rate         [0] = 1038      
+19:15:04:[0]: cpu time rate         [1] = 1038      
+19:15:04:[0]: cpu time rate         [2] = 1037      
+19:15:04:[0]: cpu time rate         [3] = 1038      
+19:15:04:[0]: cpu time rate         [4] = 1038      
+19:15:04:[0]: cpu time rate         [5] = 1036      
+19:15:04:[0]: cpu time rate         [6] = 1034      
+19:15:04:[0]: cpu time rate         [7] = 1037      
+19:15:04:[0]: cpu time rate         [8] = 1037      
+19:15:04:[0]: cpu time rate         [9] = 1034      
+19:15:04:[0]: cpu time rate         [10] = 1038      
+19:15:04:[0]: cpu time rate         [11] = 1038      
+19:15:04:[0]: cpu time rate         [12] = 1035      
+19:15:04:[0]: cpu time rate         [13] = 1038      
+19:15:04:[0]: cpu time rate         [14] = 1038      
+19:15:04:[0]: cpu time rate         [15] = 1038      
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: real time rate        [0] = 258       
+19:15:04:[0]: real time rate        [1] = 257       
+19:15:04:[0]: real time rate        [2] = 257       
+19:15:04:[0]: real time rate        [3] = 257       
+19:15:04:[0]: real time rate        [4] = 257       
+19:15:04:[0]: real time rate        [5] = 257       
+19:15:04:[0]: real time rate        [6] = 257       
+19:15:04:[0]: real time rate        [7] = 257       
+19:15:04:[0]: real time rate        [8] = 257       
+19:15:04:[0]: real time rate        [9] = 257       
+19:15:04:[0]: real time rate        [10] = 257       
+19:15:04:[0]: real time rate        [11] = 257       
+19:15:04:[0]: real time rate        [12] = 257       
+19:15:04:[0]: real time rate        [13] = 257       
+19:15:04:[0]: real time rate        [14] = 257       
+19:15:04:[0]: real time rate        [15] = 257       
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: emitted               [0] = 2.08e+06  
+19:15:04:[0]: emitted               [1] = 2.08e+06  
+19:15:04:[0]: emitted               [2] = 2.07e+06  
+19:15:04:[0]: emitted               [3] = 2.08e+06  
+19:15:04:[0]: emitted               [4] = 2.08e+06  
+19:15:04:[0]: emitted               [5] = 2.07e+06  
+19:15:04:[0]: emitted               [6] = 2.07e+06  
+19:15:04:[0]: emitted               [7] = 2.07e+06  
+19:15:04:[0]: emitted               [8] = 2.07e+06  
+19:15:04:[0]: emitted               [9] = 2.07e+06  
+19:15:04:[0]: emitted               [10] = 2.08e+06  
+19:15:04:[0]: emitted               [11] = 2.08e+06  
+19:15:04:[0]: emitted               [12] = 2.07e+06  
+19:15:04:[0]: emitted               [13] = 2.08e+06  
+19:15:04:[0]: emitted               [14] = 2.08e+06  
+19:15:04:[0]: emitted               [15] = 2.08e+06  
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: cpu time                  = 32000.8   
+19:15:04:[0]: real time                 = 8066.6    
+19:15:04:[0]: efficiency                = 3.97      
+19:15:04:[0]: cpu time rate             = 1037      
+19:15:04:[0]: real time rate            = 4113      
+19:15:04:[0]: emitted                   = 3.32e+07  
+19:15:04:[0]: ------------------------------------------------
+19:15:04:[0]: escape: total
+19:15:04:[0]: escape: xy
+19:15:05:[0]: absorption: total
+19:15:05:[0]: ------------------------------------------------
+19:15:05:[0]: ending [0] on `localhost'
+19:15:05:[0]: ending [1] on `localhost'
+19:15:05:[0]: ending [2] on `localhost'
+19:15:05:[0]: ending [3] on `localhost'
+19:15:05:[0]: ending [4] on `localhost'
+19:15:05:[0]: ending [5] on `localhost'
+19:15:05:[0]: ending [6] on `localhost'
+19:15:05:[0]: ending [7] on `localhost'
+19:15:05:[0]: ending [8] on `localhost'
+19:15:05:[0]: ending [9] on `localhost'
+19:15:05:[0]: ending [10] on `localhost'
+19:15:05:[0]: ending [11] on `localhost'
+19:15:05:[0]: ending [12] on `localhost'
+19:15:05:[0]: ending [13] on `localhost'
+19:15:05:[0]: ending [14] on `localhost'
+19:15:05:[0]: ending [15] on `localhost'
+19:15:05:[0]: ------------------------------------------------

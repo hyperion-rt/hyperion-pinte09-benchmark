@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+
+  <title>Radiative transfer in dust benchmark</title>
+  <style id='page-skin-1' type='text/css'>
+
+/* Variable definitions
+  ====================
+   <Variable name="mainBgColor" description="Main Background Color"
+             type="color" default="#fff">
+   <Variable name="mainTextColor" description="Text Color" type="color"
+             default="#000">
+   <Variable name="postTitleColor" description="Post Title Color" type="color"
+             default="#333">
+   <Variable name="dateHeaderColor" description="Date Header Color"
+             type="color" default="#810">
+   <Variable name="borderColor" description="Post Border Color" type="color"
+             default="#bbb">
+
+
+   <Variable name="mainLinkColor" description="Link Color" type="color"
+             default="#b30">
+   <Variable name="mainVisitedLinkColor" description="Visited Link Color"
+             type="color" default="#c63">
+             
+   <Variable name="titleBgColor" description="Page Header Background Color"
+             type="color" default="#710">
+   <Variable name="titleTextColor" description="Blog Title Color"
+             type="color" default="#fff">
+
+   <Variable name="topSidebarHeaderColor"
+             description="Top Sidebar Title Color"
+             type="color" default="#fff">
+   <Variable name="topSidebarBgColor"
+             description="Top Sidebar Background Color"
+             type="color" default="#999">
+   <Variable name="topSidebarTextColor" description="Top Sidebar Text Color"
+             type="color" default="#fff">
+   <Variable name="topSidebarLinkColor" description="Top Sidebar Link Color"
+             type="color" default="#fff">
+   <Variable name="topSidebarVisitedLinkColor"
+             description="Top Sidebar Visited Link Color"
+             type="color" default="#ddd">
+
+   <Variable name="bodyFont" description="Text Font" type="font"
+             default="normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+   <Variable name="pageTitleFont" description="Blog Title Font" type="font"
+             default="normal bold 200% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+   <Variable name="descriptionFont" description="Description Font" type="font"
+             default="normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+   <Variable name="headerFont" description="Sidebar Title Font" type="font"
+             default="normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+   <Variable name="postTitleFont" description="Post Title Font" type="font"
+             default="normal bold 135% 'Trebuchet MS',Verdana,Arial,Sans-serif">
+*/
+
+body {
+  background:#ccc;
+  margin:0;
+  text-align:center;
+  line-height: 1.5em;
+  font:x-small Trebuchet MS, Verdana, Arial, Sans-serif;
+  color:#000000;
+  font-size/* */:/**/small;
+  font-size: /**/small;
+  }
+
+#navbar-iframe {
+height:0px;
+visibility:hidden;
+display:none
+}
+
+/* Page Structure
+----------------------------------------------- */
+/* The images which help create rounded corners depend on the 
+   following widths and measurements. If you want to change 
+   these measurements, the images will also need to change.
+   */
+#outer-wrapper {
+  width:900px;
+  margin:0 auto;
+  margin-bottom: 5px;
+  text-align:left;
+  font: normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+  }
+#main-wrap1 {
+  width:640px;
+  float:right;
+  background:#ffffff  no-repeat left bottom;
+  margin:15px 0 0;
+  padding:0 0 10px;
+  color:#000000;
+  font-size:97%;
+  line-height:1.5em;
+  word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+  overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+  }
+#main-wrap2 {
+  float:right;
+  width:100%;
+  padding:10px 0 0;
+  }
+#main {
+  padding:0;
+  }
+#sidebar-wrap {
+  width:240px;
+  float:left;
+  margin:15px 0 0;
+  font-size:97%;
+  line-height:1.5em;
+  word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+  overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+  }
+
+.main .widget { 
+  margin: 0 13px 4px 13px;
+}
+
+.main .Blog {
+  margin: 0;
+}
+
+/* Links
+----------------------------------------------- */
+a:link {
+  color: #bb3300;
+  }
+a:visited {
+  color: #cc6633;
+  }
+a:hover {
+  color: #cc6633;
+  }
+a img {
+  border-width:0;
+  }
+
+
+/* Blog Header
+----------------------------------------------- */
+#header-wrapper {
+  background:#771100  no-repeat left top;
+  margin:22px 0 0 0;
+  padding:8px 0 0 0;
+  color:#ffffff;
+  }
+#header {
+  padding:0 15px 8px;
+  }
+#header h1 {
+  margin:0;
+  padding:10px 30px 5px;
+  line-height:1.2em;
+  font: normal bold 200% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+  }
+#header a,
+#header a:visited {
+  text-decoration:none;
+  color: #ffffff;
+  }
+#header .description {
+  margin:0;
+  padding:5px 30px 10px;
+  line-height:1.5em;
+  font: normal normal 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+
+
+/* Posts
+----------------------------------------------- */
+
+.translate {
+  font-size: 75%;
+}
+
+h2.date-header {
+  margin:0 28px 0 43px;
+  font-size:85%;
+  line-height:2em;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  color:#881100;
+  }
+.post {
+  margin:.3em 0 25px;
+  padding:0 13px;
+  border:1px dotted #bbbbbb;
+  border-width:1px 0;
+  text-align: justify;
+  }
+.post h3 {
+  margin:0;
+  line-height:1.5em;
+  background:url("http://www.blogblog.com/rounders2/icon_arrow.gif") no-repeat 10px .5em;
+  display:block;
+  border:1px dotted #bbbbbb;
+  border-width:0 1px 1px;
+  padding:2px 14px 2px 29px;
+  color: #333333;
+  font: normal bold 135% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+  }
+.post h3 a, .post h3 a:visited {
+  text-decoration:none;
+  color: #333333;
+  }
+a.title-link:hover {
+  background-color: #bbbbbb;
+  color: #000000;
+  }
+.post-body {
+  border:1px dotted #bbbbbb;
+  border-width:0 1px 1px;
+  border-bottom-color:#ffffff;
+  padding:10px 14px 1px 29px;
+  }
+html>body .post-body {
+  border-bottom-width:0;
+  }
+.post p {
+  margin:0 0 .75em;
+  text-align: justify;
+  }
+
+.post-footer {
+  background: #eee;
+  margin:0;
+  padding:2px 14px 2px 29px;
+  border:1px dotted #bbbbbb;
+  border-width:1px;
+  font-size:100%;
+  line-height:1.5em;
+  color: #666;
+}
+
+.post-footer p { 
+  margin: 0;
+}
+
+html>body .post-footer {
+  border-bottom-color:transparent;
+  }
+
+.uncustomized-post-template .post-footer {
+  text-align: right;
+}
+
+.uncustomized-post-template .post-author,
+.uncustomized-post-template .post-timestamp {
+  display: block;
+  float: left;
+  text-align:left;
+  margin-right: 4px;
+}
+
+.post-footer a { 
+  color: #bb3300;
+ }
+.post-footer a:hover { 
+  color: #cc6633;
+ }
+a.comment-link {
+  /* IE5.0/Win doesn't apply padding to inline elements,
+     so we hide these two declarations from it */
+  background/* */:/**/url("http://www.blogblog.com/rounders/2icon_comment.gif") no-repeat 0 45%;
+  padding-left:14px;
+  }
+html>body a.comment-link {
+  /* Respecified, for IE5/Mac's benefit */
+  background:url("http://www.blogblog.com/rounders2/icon_comment.gif") no-repeat 0 45%;
+  padding-left:14px;
+  }
+.post img {
+  margin:0 0 5px 0;
+  padding:4px;
+  border:1px solid #bbbbbb;
+  }
+
+blockquote {go
+  font-size: 88%;
+   line-height: 1.5em;
+  color: #666;
+  background: url('http://www.babilim.co.uk/blog/gif/quotes.gif') no-repeat top left;; margin-left:30px; margin-right:0; margin-top:0; margin-bottom:0; padding-left:20px; padding-right:0; padding-top:10px; padding-bottom:10px;
+  }
+
+/*
+blockquote {
+  margin:.75em 0;
+  border:1px dotted #bbbbbb;
+  border-width:1px 0;
+  padding:5px 15px;
+  color: #881100;
+  }
+*/
+
+.post blockquote p {
+  margin:.5em 0;
+  }
+
+#blog-pager-newer-link {
+  float: left;
+  margin-left: 13px;
+ }
+ 
+#blog-pager-older-link {
+  float: right;
+  margin-right: 13px;
+ }
+ 
+#blog-pager {   
+  text-align: center; 
+ }
+
+.feed-links { 
+  clear: both;
+  line-height: 2.5em;
+  margin-left: 13px;
+}
+
+/* Comments
+----------------------------------------------- */
+#comments {
+  margin:-25px 13px 0;
+  border:1px dotted #bbbbbb;
+  border-width:0 1px 1px;
+  padding:20px 0 15px 0;
+  }
+#comments h4 {
+  margin:0 0 10px;
+  padding:0 14px 2px 29px;
+  border-bottom:1px dotted #bbbbbb;
+  font-size:120%;
+  line-height:1.4em;
+  color:#333333;
+  }
+#comments-block {
+  margin:0 15px 0 9px;
+  }
+.comment-author {
+  background:url("http://www.blogblog.com/rounders2/icon_comment.gif") no-repeat 2px .3em;
+  margin:.5em 0;
+  padding:0 0 0 20px;
+  font-weight:bold;
+  }
+.comment-body {
+  margin:0 0 1.25em;
+  padding:0 0 0 20px;
+  }
+.comment-body p {
+  margin:0 0 .5em;
+  }
+.comment-footer {
+  margin:0 0 .5em;
+  padding:0 0 .75em 20px;
+  }
+.comment-footer a:link {
+  color: #000000;
+  }
+.deleted-comment {
+  font-style:italic;
+  color:gray;
+  }
+
+
+/* Profile
+----------------------------------------------- */
+.profile-img { 
+  float: left;
+  margin: 5px 5px 5px 0;
+  border: 4px solid #ffffff;
+}
+
+.profile-datablock {
+  margin:0 15px .5em 0;
+  padding-top:8px;
+  text-align:justify;
+}
+
+.profile-link { 
+  background:url("http://www.blogblog.com/rounders2/icon_profile.gif") no-repeat 0 .1em;
+  padding-left:15px;
+  font-weight:bold;
+}
+
+.profile-textblock {
+  clear: both;
+  margin: 0;
+}
+
+.sidebar .clear, .main .widget .clear { 
+  clear: both;
+}
+
+#sidebartop-wrap {
+  background:#999999 url("http://www.blogblog.com/rounders2/corners_prof_bot.gif") no-repeat left bottom;
+  margin:0px 0px 15px;
+  padding:0px 0px 10px;
+  color:#ffffff;
+  }
+
+#sidebartop-wrap2 { 
+ background:url("http://www.blogblog.com/rounders2/corners_prof_top.gif") no-repeat left top;
+  padding: 10px 0 0;
+  margin:0;
+  border-width:0;
+ }
+
+#sidebartop h2 {
+  line-height:1.5em;
+  color:#ffffff;
+  border-bottom: 1px dotted #ffffff;
+  margin-bottom: 0.5em;
+  font: normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+
+#sidebartop a { 
+ color: #ffffff;
+}
+
+#sidebartop a:hover { 
+ color: #dddddd;
+}
+#sidebartop a:visited { 
+ color: #dddddd;
+}
+/* Sidebar Boxes
+----------------------------------------------- */
+
+.sidebar .widget { 
+  margin:.5em 13px 1.25em;
+  margin-bottom: 0px;
+  padding:0 0px;
+ }
+
+.widget-content { 
+  margin-top: 0.5em;
+}
+
+#delicious li {
+  border-bottom:none;
+}
+
+#sidebarbottom-wrap1 {
+  background:#ffffff url("http://www.blogblog.com/rounders2/corners_side_top.gif") no-repeat left top;
+  margin:0 0 15px;
+  padding:10px 0 0;
+  color: #000000;
+}
+
+#sidebarbottom-wrap2 {
+  background:url("http://www.blogblog.com/rounders2/corners_side_bot.gif") no-repeat left bottom;
+  padding:8px 0px 8px;
+}
+
+.sidebar h2 {
+  margin:0;
+  padding:0 0 .2em;
+  line-height:1.5em;
+  font:normal bold 100% 'Trebuchet MS',Verdana,Arial,Sans-serif;
+}
+
+.sidebar ul {
+  list-style:none;
+  margin:0 0 1.25em;
+  padding:0 0px;
+}
+
+.sidebar ul li {
+  background:url("http://www.blogblog.com/rounders2/icon_arrow_sm.gif") no-repeat 2px .25em;
+  margin:0;
+  padding:0 0 3px 16px;
+  margin-bottom:3px;
+  border-bottom:1px dotted #bbbbbb;
+  line-height:1.4em;
+  }
+.sidebar p {
+  margin:0 0 .6em;
+  }
+
+#sidebar h2 { 
+  color: #333333;
+  border-bottom: 1px dotted #333333;
+ }
+
+/* Footer
+----------------------------------------------- */
+#footer-wrap1 {
+  clear:both;
+  margin:0;
+  padding:15px 0 0;
+  }
+#footer-wrap2 {
+  background:#771100 url("http://www.blogblog.com/rounders2/corners_cap_top.gif") no-repeat left top;
+  padding:8px 0 0;
+  color:#ffffff;
+  }
+#footer {
+  background:url("http://www.blogblog.com/rounders2/corners_cap_bot.gif") no-repeat left bottom;
+  padding:8px 15px 8px;
+  }
+#footer hr {display:none;}
+#footer p {margin:0;}
+#footer a {color:#ffffff;}
+
+/** Page structure tweaks for layout editor wireframe */
+body#layout #main-wrap1,
+body#layout #sidebar-wrap,
+body#layout #header-wrapper {
+  margin-top: 0;
+}
+
+body#layout #header, body#layout #header-wrapper,
+body#layout #outer-wrapper { 
+  margin-left:0,
+  margin-right: 0;
+  padding: 0;
+}
+
+body#layout #outer-wrapper { 
+  width: 730px;
+}
+
+body#layout #footer-wrap1 { 
+  padding-top: 0;
+ }
+
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div id='outer-wrapper'>
+
+  <div id='header-wrapper'>
+    <div class='header section' id='header'><div class='widget Header' id='Header1'>
+  <div class='titlewrapper'>
+    <h1 class='title'>
+      
+      Radiative Transfer in Dust Benchmark
+      
+    </h1>
+  </div>
+<!---  <div class='descriptionwrapper'>
+    <p class='description'><span>Astrophysics Group, School of Physics, University ofExeter</span></p><br><br>
+  </div> -->
+</div>
+</div>
+  </div>
+
+ <div id='sidebar-wrap'>
+
+    <div id='sidebarbottom-wrap1'><div id='sidebarbottom-wrap2'>
+      <div class='sidebar section' id='sidebar'><div class='widget HTML' id='HTML4'>
+  
+  
+</div><div class='widget TextList' id='TextList1'>
+ <h2>Main Menu</h2>
+ <div class='widget-content'>
+   <ul>
+     
+       <li><A href="index.html">Home</A></li>
+       <li><A href="def.html">Problem Definition</A></li>
+          </ul> 
+  
+ </div>
+
+
+ <h2>Intermediate results</h2>
+ <div class='widget-content'>
+   <ul>
+     
+       <li><A href="density.html">Disk density structure</A></li>
+       <li><A href="optical_properties.html">Optical
+       properties</A></li>
+      <li><A href="opacity.html">Disk opacity</A></li>
+   </ul> 
+  
+ </div>
+
+ <h2>Results</h2>
+ <div class='widget-content'>
+   <ul>
+      <li><A href="temperature.html">Temperature structures</a></li>
+      <li><A href="sed.html">SEDs</A></li>
+      <li><A href="image.html">Scattered light images</A></li>
+      <li><A  href="pola.html">Polarization maps</A></li>
+   </ul> 
+  
+
+ </div>
+   
+ <h2>Article</h2>
+ <div class='widget-content'>
+   <ul>
+      <li><A  href="http://arxiv.org/abs/0903.1231">Accepted in A&amp;A</A></li>
+   </ul> 
+  
+
+ </div>
+
+ <h2>Contact</h2>
+ <div class='widget-content'>
+   <ul>
+     <img src="../email.png" width="175" alt="email">
+   </ul> 
+  
+
+ </div>
+
+
+
+
+
+<ADDRESS>
+Last Modified: 19 December 2008 
+
+</ADDRESS>
+
+
+
+
+</div>
+
+<div class='widget LinkList' id='LinkList1'>
+
+
+   
+    </div></div>
+    </div></div>
+ </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div id='main-wrap1'><div id='main-wrap2'>
+    <div class='main section' id='main'><div class='widget HTML' id='HTML5'>
+
+  
+<h2>Disk opacity</h2>
+
+The total optical depth in the equatorial plane (from the star to the
+observer) at 1 &micro;m is 9.42 10<sup>5</sup> for the most massive disk. (M = 10<sup>-5</sup>M<sub>sun</sub>).
+The optical depth is 1131 for an inclination of 80 degrees (from
+pole-on) and 0.088 for an inclination of 70 degrees. <br><br>
+
+The midplane opacity at 1 &micro;m then goes from &tau; ~ 10<sup>3</sup> to &tau; ~
+10<sup>6</sup> as the disk mass increases.
+
+</div></div>
+  </div></div>
+
+
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
