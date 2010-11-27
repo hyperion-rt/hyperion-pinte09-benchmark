@@ -7,7 +7,7 @@ from hyperionrt.util.constants import rsun, pi, sigma, au, msun
 
 from hyperionrt.util.functions import create_dir
 
-prefix = 'sph_18oct10'
+prefix = 'sph_06nov10'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -15,7 +15,7 @@ if not os.path.exists(prefix):
 create_dir('%s/models' % prefix)
 
 for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
-    
+
     m = AnalyticalYSOModel('%s/models/tau%3.0e' % (prefix, tau))
 
     # Star:
@@ -23,9 +23,9 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     # T_star = 4,000K
     # R_star = 2 * R_sun
 
-    m.set_stellar_radius(2*rsun)
-    m.set_stellar_temperature(4000.)
-    m.set_stellar_luminosity(4. * pi * (2. * rsun)**2 * sigma * 4000.**4)
+    m.star.radius = 2. * rsun
+    m.star.temperature = 4000.
+    m.star.luminosity = 4. * pi * (2. * rsun) ** 2. * sigma * 4000. ** 4.
 
     # Disk:
     #
@@ -37,14 +37,15 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     # Disk mass (dust!) = 3e-8, 3e-7, 3e-6, 3e-5
 
     disk = m.add_flared_disk()
-    disk.mstar = msun
-    disk.alpha = 2.625 # needs fixing
+    disk.alpha = 2.625  # needs fixing
     disk.beta = 1.125
     disk.mass = 3.e-8 * msun * tau / 1.e3
     disk.rmin = 0.1 * au
     disk.rmax = 400 * au
-    disk.h_star = 10 * au * (m.rstar / (100.*au))**disk.beta
-    disk.geometrical_factor = False # If this is left out, grazing model doesn't work properly
+    disk.h_star = 10 * au * (m.star.radius / (100. * au)) ** disk.beta
+
+    # If this is left out, grazing model doesn't work properly
+    disk.geometrical_factor = False
 
     disk.cylindrical_inner_rim = True
     disk.cylindrical_outer_rim = True
@@ -64,14 +65,14 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     # theta = np.degrees(np.arccos(np.linspace(0.05,0.95,10)))
     # phi = np.ones(10) * 30
 
-    theta = np.degrees(np.arccos(np.array([0.95,0.25,0.15,0.05])))
+    theta = np.degrees(np.arccos(np.array([0.95, 0.25, 0.15, 0.05])))
     phi = np.array([45., 45., 45., 45.])
 
     image = m.add_peeled_images()
     image.set_viewing_angles(theta, phi)
     image.set_image_size(1, 1)
-    image.set_image_limits(-450.*au, 450.*au, -450.*au, 450.*au)
-    image.set_aperture_range(1, 450.*au, 450.*au)
+    image.set_image_limits(-450. * au, 450. * au, -450. * au, 450. * au)
+    image.set_aperture_range(1, 450. * au, 450. * au)
     image.set_wavelength_range(2000, 0.01, 5000.)
 
     m.set_raytracing(True)
@@ -82,14 +83,15 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     # the new auto (twice as much resolution at the midplane as at the poles)
     # gives a much beter agreement
 
-    m.set_spherical_polar_grid_auto(399,299,1,rmax=500.*au)
+    m.set_spherical_polar_grid_auto(399, 299, 1, rmax=500. * au)
 
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
-    m.set_n_photons(temperature=100000000, imaging=1000000, raytracing=1000000, stats=10000)
+    m.set_n_photons(temperature=100000000, imaging=1000000,
+                    raytracing=1000000, stats=10000)
     m.set_max_interactions(10000000)
-    
+
     wavelengths = np.loadtxt('benchmark/data/wavelength_points.txt')
     m.set_monochromatic(True, wavelengths=wavelengths)
-    
+
     m.write()
