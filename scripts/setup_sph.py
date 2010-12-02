@@ -2,12 +2,12 @@ import os
 
 import numpy as np
 
-from hyperionrt.model import AnalyticalYSOModel
-from hyperionrt.util.constants import rsun, pi, sigma, au, msun
+from hyperion.model import AnalyticalYSOModel
+from hyperion.util.constants import rsun, pi, sigma, au, msun
 
-from hyperionrt.util.functions import create_dir
+from hyperion.util.functions import create_dir
 
-prefix = 'sph_06nov10'
+prefix = 'sph_0.6.6'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -42,7 +42,8 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     disk.mass = 3.e-8 * msun * tau / 1.e3
     disk.rmin = 0.1 * au
     disk.rmax = 400 * au
-    disk.h_star = 10 * au * (m.star.radius / (100. * au)) ** disk.beta
+    disk.h_0 = 10 * au
+    disk.r_0 = 100. * au
 
     # If this is left out, grazing model doesn't work properly
     disk.geometrical_factor = False
@@ -87,8 +88,11 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
 
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
-    m.set_n_photons(temperature=100000000, imaging=1000000,
-                    raytracing=1000000, stats=10000)
+
+    m.set_n_photons(temperature=100000000, imaging_mono_sources=1000000, imaging_mono_dust=20000000,
+                    raytracing_sources=1000000, raytracing_dust=1000000,
+                    stats=10000)
+
     m.set_max_interactions(10000000)
 
     wavelengths = np.loadtxt('benchmark/data/wavelength_points.txt')
