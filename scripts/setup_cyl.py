@@ -7,7 +7,7 @@ from hyperion.util.constants import rsun, pi, sigma, au, msun
 
 from hyperion.util.functions import create_dir
 
-prefix = 'cyl_0.6.6'
+prefix = 'cyl_0.6.11'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -37,16 +37,13 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     # Disk mass (dust!) = 3e-8, 3e-7, 3e-6, 3e-5
 
     disk = m.add_flared_disk()
-    disk.alpha = 2.625  # needs fixing
+    disk.p = -1.5
     disk.beta = 1.125
     disk.mass = 3.e-8 * msun * tau / 1.e3
     disk.rmin = 0.1 * au
     disk.rmax = 400 * au
     disk.h_0 = 10 * au
     disk.r_0 = 100. * au
-
-    # If this is left out, grazing model doesn't work properly
-    disk.geometrical_factor = False
 
     disk.cylindrical_inner_rim = True
     disk.cylindrical_outer_rim = True
