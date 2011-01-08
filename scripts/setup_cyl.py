@@ -4,6 +4,7 @@ import numpy as np
 
 from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import rsun, pi, sigma, au, msun
+from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
@@ -52,7 +53,7 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     #
     # Spherical grains, 1 micron, 3.5g/cm^3
 
-    disk.dust = 'dust/pinte_dust.hdf5'
+    disk.dust = SphericalDust('dust/pinte_dust.hdf5')
 
     # SEDs/Images:
     #
