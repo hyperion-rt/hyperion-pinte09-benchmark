@@ -2,10 +2,10 @@ import os
 
 import numpy as np
 
-from hyperionrt.model import AnalyticalYSOModel
-from hyperionrt.util.constants import rsun, pi, sigma, au, msun
+from hyperion.model import AnalyticalYSOModel
+from hyperion.util.constants import rsun, pi, sigma, au, msun
 
-from hyperionrt.util.functions import create_dir
+from hyperion.util.functions import create_dir
 
 prefix = 'sph_18oct10'
 
