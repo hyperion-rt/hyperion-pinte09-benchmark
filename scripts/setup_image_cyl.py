@@ -4,10 +4,11 @@ import numpy as np
 
 from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import rsun, pi, sigma, au, msun
+from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'cyl_18oct10'
+prefix = 'cyl_0.6.11'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -23,9 +24,9 @@ for i, tau in enumerate([1e6]):
     # T_star = 4,000K
     # R_star = 2 * R_sun
 
-    m.set_stellar_radius(2*rsun)
-    m.set_stellar_temperature(4000.)
-    m.set_stellar_luminosity(4. * pi * (2. * rsun)**2 * sigma * 4000.**4)
+    m.star.radius = 2. * rsun
+    m.star.temperature = 4000.
+    m.star.luminosity = 4. * pi * (2. * rsun) ** 2. * sigma * 4000. ** 4.
 
     # Disk:
     #
@@ -37,14 +38,13 @@ for i, tau in enumerate([1e6]):
     # Disk mass (dust!) = 3e-8, 3e-7, 3e-6, 3e-5
 
     disk = m.add_flared_disk()
-    disk.mstar = msun
-    disk.alpha = 2.625 # needs fixing
+    disk.p = -1.5
     disk.beta = 1.125
     disk.mass = 3.e-8 * msun * tau / 1.e3
     disk.rmin = 0.1 * au
     disk.rmax = 400 * au
-    disk.h_star = 10 * au * (m.rstar / (100.*au))**disk.beta
-    disk.geometrical_factor = False # If this is left out, grazing model doesn't work properly
+    disk.h_0 = 10 * au
+    disk.r_0 = 100. * au
 
     disk.cylindrical_inner_rim = True
     disk.cylindrical_outer_rim = True
@@ -53,7 +53,7 @@ for i, tau in enumerate([1e6]):
     #
     # Spherical grains, 1 micron, 3.5g/cm^3
 
-    disk.dust = 'dust/pinte_dust.hdf5'
+    disk.dust = SphericalDust('dust/pinte_dust.hdf5')
 
     # SEDs/Images:
     #
@@ -87,11 +87,11 @@ for i, tau in enumerate([1e6]):
     import h5py
     f = h5py.File('%s/models/tau%3.0e.rtout' % (prefix,tau),'r')
     temperature = f['Iteration 00010']['temperature'][0,:,:,:]
-    m.add_temperature_grid(temperature)
+    m.temperature.append(temperature)
     
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
-    m.set_n_photons(temperature=10000000, imaging=1000000000, raytracing=10000000, stats=100000)
+    m.set_n_photons(temperature=10000000, imaging_mono_sources=1000000000, imaging_mono_dust=20000000000, raytracing_sources=10000000, raytracing_dust=10000000, stats=100000)
     m.set_max_interactions(10000)
 
     m.set_monochromatic(True, wavelengths=np.array([1.]))
