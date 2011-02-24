@@ -12,8 +12,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as mpl
 
-from hyperionrt.model import Model
-from hyperionrt.util.constants import pc
+from hyperion.model import Model
+from hyperion.util.constants import pc
 
 import numpy as np
 
@@ -58,7 +58,7 @@ rang[2][1] = (2e-20, 7e-19)
 rang[2][2] = (5e-23, 1e-18)
 
 
-for stokes in ['I','pol']:
+for stokes in ['I','linpol']:
     
     fig = mpl.figure(figsize=(6.5, 6.5))
     
@@ -101,7 +101,12 @@ for stokes in ['I','pol']:
         if incl % 2 == 0:
 
             # Retrieve image
-            wav, image = m.get_image(distance=140*pc, inclination=incl/2, stokes=stokes)
+            if stokes == 'I':
+                distance=140.*pc
+            else:
+                distance=None
+
+            wav, image = m.get_image(distance=distance, inclination=incl/2, stokes=stokes)
 
             if incl in [0,1]:
                 v = 126-30
@@ -114,10 +119,9 @@ for stokes in ['I','pol']:
                 
             if stokes is 'I':
                 # Conversion to W/m^2
-                image = image[0] * 1.e-3
+                image *= 1.e-3
                 image_display = (np.clip((image[0,:,:] - vmin) / (vmax - vmin),0,1))**0.25
             else:
-                image = image[0]
                 image_display = image[0,:,:]
                 image_display[np.isnan(image_display)] = 0.
 

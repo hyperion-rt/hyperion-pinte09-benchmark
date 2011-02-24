@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.6.11'
+prefix = 'sph_0.7.2'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -86,9 +86,8 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
 
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
-
-    m.set_n_photons(temperature=100000000, imaging_mono_sources=1000000, imaging_mono_dust=20000000,
-                    raytracing_sources=1000000, raytracing_dust=1000000,
+    m.set_n_photons(temperature=100000000, imaging_mono_sources=10000000, imaging_mono_dust=200000000,
+                    raytracing_sources=10000000, raytracing_dust=10000000,
                     stats=10000)
 
     m.set_max_interactions(10000000)

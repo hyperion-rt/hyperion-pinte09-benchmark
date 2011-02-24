@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.6.11'
+prefix = 'sph_0.7.2'
 
 if not os.path.exists(prefix):
     create_dir(prefix)

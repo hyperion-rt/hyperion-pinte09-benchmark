@@ -13,8 +13,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as mpl
 
 import h5py
-from hyperionrt.util.constants import au
-from hyperionrt.util.integrate import interp1d_log10
+from hyperion.util.constants import au
+from hyperion.util.integrate import interp1d_log10
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
 
