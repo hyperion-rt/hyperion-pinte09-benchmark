@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.7.2'
+prefix = 'sph_0.7.6'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -77,6 +77,7 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     m.set_raytracing(True)
 
     m.set_n_temperature_iterations(10)
+    m.set_convergence(True, percentile=99., absolute=2., relative=1.02)
 
     # theta resolution matters for the edge-on viewing angles. Doing it with
     # the new auto (twice as much resolution at the midplane as at the poles)
