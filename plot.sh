@@ -5,13 +5,13 @@ VERSION=0.7.7
 if [ ! -d "plots_cyl_$VERSION" ]; then
   mkdir "plots_cyl_$VERSION"
 else
-  rm plots_cyl/*
+  rm plots_cyl_$VERSION/*
 fi
 
 if [ ! -d "plots_sph_$VERSION" ]; then
   mkdir "plots_sph_$VERSION"
 else
-  rm plots_sph/*
+  rm plots_sph_$VERSION/*
 fi
 
 python scripts/plot_seds.py "cyl_$VERSION" "plots_cyl_$VERSION"

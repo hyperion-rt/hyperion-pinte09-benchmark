@@ -200,7 +200,7 @@ for tau in ['1e3','1e6']:
 
     # RADIAL ABSOLUTE
 
-    if tau is '1e3':
+    if tau == '1e3':
         xmin = xmargin
     else:
         xmin = 0.5 + xmargin
@@ -239,16 +239,17 @@ for tau in ['1e3','1e6']:
     ax.set_xlim(1.e-6, 400.)
     ax.set_xlabel('Radius (AU) - 0.1AU')
 
-    if tau is '1e3':
+    if tau == '1e3':
         ax.set_ylim(-5.,5.)
-    elif tau is '1e6':
-        ax.set_ylim(-15.,15.)
+        ax.yaxis.set_ticks([-4., -2., 0., 2., 4.])
+    elif tau == '1e6':
+        ax.set_ylim(-25.,25.)
+        ax.yaxis.set_ticks([-20., -10., 0., 10., 20.])
     ax.axhline(0., lw=0.5, ls='dashed', color='black')
-    ax.yaxis.set_ticks([-10., 0., 10.])
     artist = ax.text(-0.13, 0.5, r'Difference (\%)', rotation='vertical', ha='center', va='center', transform=ax.transAxes, size='x-small')
     artists.append(artist)
 
-    if tau is '1e6':
+    if tau == '1e6':
 
         # Find average vertical1 temperature
 
@@ -310,6 +311,7 @@ for tau in ['1e3','1e6']:
 
         ax.set_ylim(-17.,17.)
         ax.axhline(0., lw=0.5, ls='dashed', color='black')
+        ax.set_ylim(-9., 9.)
         ax.yaxis.set_ticks([-5., 0., 5.])
         artist = ax.text(-0.13, 0.5, r'Difference (\%)', rotation='vertical', ha='center', va='center', transform=ax.transAxes, size='x-small')
         artists.append(artist)
@@ -374,6 +376,7 @@ for tau in ['1e3','1e6']:
 
         ax.set_ylim(-17.,17.)
         ax.axhline(0., lw=0.5, ls='dashed', color='black')
+        ax.set_ylim(-9., 9.)
         ax.yaxis.set_ticks([-5., 0., 5.])
         artist = ax.text(-0.13, 0.5, r'Difference (\%)', rotation='vertical', ha='center', va='center', transform=ax.transAxes, size='x-small')
         artists.append(artist)
