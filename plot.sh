@@ -1,13 +1,24 @@
 #!/bin/bash
 
-rm plots_sph/*
-rm plots_cyl/*
+VERSION=0.7.7
 
-python scripts/plot_seds_paper.py cyl_0.7.1 plots_cyl
-python scripts/plot_seds_paper.py sph_0.7.1 plots_sph
+if [ ! -d "plots_cyl_$VERSION" ]; then
+  mkdir "plots_cyl_$VERSION"
+else
+  rm plots_cyl/*
+fi
 
-python scripts/plot_temperatures_paper.py cyl_0.7.1 plots_cyl
-python scripts/plot_temperatures_paper.py sph_0.7.1 plots_sph
+if [ ! -d "plots_sph_$VERSION" ]; then
+  mkdir "plots_sph_$VERSION"
+else
+  rm plots_sph/*
+fi
 
-python scripts/plot_image_paper.py cyl_0.7.1 plots_cyl
-python scripts/plot_image_paper.py sph_0.7.1 plots_sph
+python scripts/plot_seds.py "cyl_$VERSION" "plots_cyl_$VERSION"
+python scripts/plot_seds.py "sph_$VERSION" "plots_sph_$VERSION"
+
+python scripts/plot_temperatures.py "cyl_$VERSION" "plots_cyl_$VERSION"
+python scripts/plot_temperatures.py "sph_$VERSION" "plots_sph_$VERSION"
+
+python scripts/plot_images.py "cyl_$VERSION" "plots_cyl_$VERSION"
+python scripts/plot_images.py "sph_$VERSION" "plots_sph_$VERSION"
