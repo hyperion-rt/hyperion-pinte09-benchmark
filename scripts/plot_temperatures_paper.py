@@ -48,7 +48,7 @@ for tau in ['1e3','1e6']:
 
     # Get Hyperion results
     f = h5py.File(prefix + '/models/tau%3.0e.rtout' % float(tau))
-    temperature = f['Iteration 00010']['temperature'][0,0,:,:]
+    temperature = f['Iteration %05i' % (len(f) - 1)]['temperature'][0,0,:,:]
 
     f = h5py.File(prefix + '/models/tau%3.0e.rtin' % float(tau))
 
