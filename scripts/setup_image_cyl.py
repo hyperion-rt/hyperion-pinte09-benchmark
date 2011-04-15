@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'cyl_0.7.2'
+prefix = 'cyl_0.7.7'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -84,10 +84,7 @@ for i, tau in enumerate([1e6]):
 
     m.set_cylindrical_polar_grid_auto(399,299,1)
 
-    import h5py
-    f = h5py.File('%s/models/tau%3.0e.rtout' % (prefix,tau),'r')
-    temperature = f['Iteration 00010']['temperature'][0,:,:,:]
-    m.temperature.append(temperature)
+    m.temperature = '%s/models/tau%3.0e.rtout' % (prefix, tau)
     
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
