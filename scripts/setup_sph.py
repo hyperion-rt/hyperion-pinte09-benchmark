@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.7.7'
+prefix = 'sph_0.7.8'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -76,7 +76,7 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
 
     m.set_raytracing(True)
 
-    m.set_n_temperature_iterations(10)
+    m.set_n_initial_iterations(10)
     m.set_convergence(True, percentile=99., absolute=2., relative=1.02)
 
     # theta resolution matters for the edge-on viewing angles. Doing it with
@@ -85,15 +85,16 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
 
     m.set_spherical_polar_grid_auto(399, 299, 1, rmax=500. * au)
 
-    m.set_mrw(True, gamma=2.)
-    m.set_pda(True)
-    m.set_n_photons(temperature=100000000, imaging_mono_sources=10000000, imaging_mono_dust=200000000,
-                    raytracing_sources=10000000, raytracing_dust=10000000,
-                    stats=10000)
-
-    m.set_max_interactions(10000000)
-
     wavelengths = np.loadtxt('benchmark/data/wavelength_points.txt')
     m.set_monochromatic(True, wavelengths=wavelengths)
+
+    m.set_mrw(True, gamma=2.)
+    m.set_pda(True)
+
+    m.set_n_photons(initial=100000000, imaging_sources=10000000, imaging_dust=200000000,
+                    raytracing_sources=10000000, raytracing_dust=10000000,
+                    stats=1000000)
+
+    m.set_max_interactions(10000000)
 
     m.write()

@@ -15,6 +15,8 @@ import matplotlib.pyplot as mpl
 import h5py
 from hyperion.util.constants import au
 from hyperion.util.integrate import interp1d_log10
+from hyperion.model import Model
+
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
 
@@ -47,10 +49,13 @@ artists = []
 for tau in ['1e3','1e6']:
 
     # Get Hyperion results
-    f = h5py.File(prefix + '/models/tau%3.0e.rtout' % float(tau))
-    temperature = f['Iteration %05i' % (len(f) - 1)]['temperature'][0,0,:,:]
+    m = Model(prefix + '/models/tau%3.0e' % float(tau))
+    temperature = m.get_physical_grid('temperature')[0][0,:,:]
 
-    f = h5py.File(prefix + '/models/tau%3.0e.rtin' % float(tau))
+    # f = h5py.File(prefix + '/models/tau%3.0e.rtout' % float(tau))
+    # temperature = f['Iteration %05i' % (len(f) - 1)]['temperature'][0,0,:,:]
+
+    f = h5py.File(prefix + '/models/tau%3.0e.rtin' % float(tau), 'r')
 
     if 'w' in f['Grid/Geometry/Walls 1'].dtype.names:
 

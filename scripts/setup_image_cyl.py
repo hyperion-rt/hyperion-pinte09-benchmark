@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'cyl_0.7.7'
+prefix = 'cyl_0.7.8'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -76,7 +76,7 @@ for i, tau in enumerate([1e6]):
 
     m.set_raytracing(True)
 
-    m.set_n_temperature_iterations(0)
+    m.set_n_initial_iterations(0)
 
     # theta resolution matters for the edge-on viewing angles. Doing it with
     # the new auto (twice as much resolution at the midplane as at the poles)
@@ -84,13 +84,13 @@ for i, tau in enumerate([1e6]):
 
     m.set_cylindrical_polar_grid_auto(399,299,1)
 
-    m.temperature = '%s/models/tau%3.0e.rtout' % (prefix, tau)
+    m.specific_energy = '%s/models/tau%3.0e.rtout' % (prefix, tau)
+
+    m.set_monochromatic(True, wavelengths=np.array([1.]))
     
     m.set_mrw(True, gamma=2.)
     m.set_pda(True)
-    m.set_n_photons(temperature=10000000, imaging_mono_sources=1000000000, imaging_mono_dust=20000000000, raytracing_sources=10000000, raytracing_dust=10000000, stats=100000)
+    m.set_n_photons(imaging_sources=1000000000, imaging_dust=20000000000, raytracing_sources=10000000, raytracing_dust=10000000, stats=100000)
     m.set_max_interactions(10000)
-
-    m.set_monochromatic(True, wavelengths=np.array([1.]))
     
     m.write()
