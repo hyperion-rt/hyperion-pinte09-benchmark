@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.7.8
+VERSION="0.8.0"
 
 if [ ! -d "plots_cyl_$VERSION" ]; then
   mkdir "plots_cyl_$VERSION"
