@@ -141,7 +141,7 @@ for i, tau in enumerate(tau_string):
     ax2.set_xlim(0.12, 2000.)
     ax2.xaxis.set_major_formatter(mpl.NullFormatter())
     if i%2 == 0:
-        artist = ax2.text(-0.15, 0.5, r'$\lambda F_\lambda$ (ergs/cm$^2$/s)', rotation='vertical', ha='center', va='center', transform=ax2.transAxes, size='x-small')
+        artist = ax2.text(-0.15, 0.5, r'$\lambda F_\lambda$ [ergs/cm$^2$/s]', rotation='vertical', ha='center', va='center', transform=ax2.transAxes, size='x-small')
         artists.append(artist)
 
     # Y-axis
