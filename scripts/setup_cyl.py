@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'cyl_0.8.4'
+prefix = 'cyl_0.8.10'
 
 if not os.path.exists(prefix):
     create_dir(prefix)

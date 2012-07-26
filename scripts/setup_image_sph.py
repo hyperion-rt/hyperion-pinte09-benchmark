@@ -2,13 +2,13 @@ import os
 
 import numpy as np
 
-from hyperion.model import AnalyticalYSOModel
+from hyperion.model import Model
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.8.4'
+prefix = 'sph_0.8.10'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -17,43 +17,20 @@ create_dir('%s/models_images' % prefix)
 
 for i, tau in enumerate([1e6]):
 
-    m = AnalyticalYSOModel('%s/models_images/tau%3.0e' % (prefix,tau))
+    m = Model('%s/models_images/tau%3.0e' % (prefix,tau))
 
     # Star:
     #
     # T_star = 4,000K
     # R_star = 2 * R_sun
 
-    m.star.radius = 2. * rsun
-    m.star.temperature = 4000.
-    m.star.luminosity = 4. * pi * (2. * rsun) ** 2. * sigma * 4000. ** 4.
+    star = m.add_spherical_source()
+    star.radius = 2. * rsun
+    star.temperature = 4000.
+    star.luminosity = 4. * pi * (2. * rsun) ** 2. * sigma * 4000. ** 4.
 
-    # Disk:
-    #
-    # Sigma(r) = Sigma_0 * (r/r_0)^-1.5
-    # h(r) = h_0 * (r/r_0)^1.125
-    # h_0 = 10 AU at 100AU
-    # r_in = 0.1AU, r_out = 400AU\
-    # Sharp vertical edges in cylindrical polar coordinates
-    # Disk mass (dust!) = 3e-8, 3e-7, 3e-6, 3e-5
-
-    disk = m.add_flared_disk()
-    disk.p = -1.5
-    disk.beta = 1.125
-    disk.mass = 3.e-8 * msun * tau / 1.e3
-    disk.rmin = 0.1 * au
-    disk.rmax = 400 * au
-    disk.h_0 = 10 * au
-    disk.r_0 = 100. * au
-
-    disk.cylindrical_inner_rim = True
-    disk.cylindrical_outer_rim = True
-
-    # Dust:
-    #
-    # Spherical grains, 1 micron, 3.5g/cm^3
-
-    disk.dust = SphericalDust('dust/pinte_dust.hdf5')
+    m.use_geometry('%s/models/tau%3.0e.rtout' % (prefix, tau))
+    m.use_quantities('%s/models/tau%3.0e.rtout' % (prefix, tau))
 
     # SEDs/Images:
     #
@@ -81,10 +58,6 @@ for i, tau in enumerate([1e6]):
     # theta resolution matters for the edge-on viewing angles. Doing it with
     # the new auto (twice as much resolution at the midplane as at the poles)
     # gives a much beter agreement
-
-    m.set_spherical_polar_grid_auto(399,299,1,rmax=500.*au)
-
-    m.specific_energy = '%s/models/tau%3.0e.rtout' % (prefix,tau)
 
     m.set_monochromatic(True, wavelengths=np.array([1.]))
 
