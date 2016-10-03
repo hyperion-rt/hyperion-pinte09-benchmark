@@ -8,7 +8,7 @@ from hyperion.dust import SphericalDust
 
 from hyperion.util.functions import create_dir
 
-prefix = 'sph_0.8.10'
+prefix = 'sph_0.9.5'
 
 if not os.path.exists(prefix):
     create_dir(prefix)
@@ -72,7 +72,6 @@ for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
     image.set_image_size(1, 1)
     image.set_image_limits(-450. * au, 450. * au, -450. * au, 450. * au)
     image.set_aperture_range(1, 450. * au, 450. * au)
-    image.set_wavelength_range(2000, 0.01, 5000.)
 
     m.set_raytracing(True)
 

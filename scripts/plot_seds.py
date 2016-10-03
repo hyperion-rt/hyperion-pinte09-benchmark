@@ -16,8 +16,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as mpl
 
-from hyperion.model import Model
-from hyperion.util.integrate import interp1d_log10
+from hyperion.model import ModelOutput
 from hyperion.util.constants import pc, pi, c, rsun
 from hyperion.util.functions import B_nu
 
@@ -62,6 +61,8 @@ fig = mpl.figure(figsize=(6.5,7.5))
 artists = []
 
 for i, tau in enumerate(tau_string):
+    
+    print(tau)
 
     if i in [0,2]:
         x0 = 0.
@@ -86,7 +87,7 @@ for i, tau in enumerate(tau_string):
         ax = fig.add_axes([xmin, ymin, dx, dy])
 
         # Get Hyperion SED
-        m = Model('%s/models/tau%3.0e' % (prefix, float(tau)))
+        m = ModelOutput('%s/models/tau%3.0e.rtout' % (prefix, float(tau)))
         wav_hyperion, sed_hyperion = m.get_sed(distance=140.*pc, inclination=j)
         sed_hyperion = sed_hyperion[0]
 
@@ -131,7 +132,7 @@ for i, tau in enumerate(tau_string):
 
         # Plot SEDs
         ax2.scatter(wav_average, sed_average, color='gray', marker='o', lw=0, s=5, edgecolor='none')
-        ax2.loglog(wav_average, sed_hyperion, color='black', marker='-', lw=0.5)
+        ax2.loglog(wav_average, sed_hyperion, color='black', lw=0.5)
 
     # Plot stellar photosphere
     nu_average = c/(wav_average*1.e-4)

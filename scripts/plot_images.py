@@ -12,7 +12,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as mpl
 
-from hyperion.model import Model
+from hyperion.model import ModelOutput
 from hyperion.util.constants import pc
 
 import numpy as np
@@ -34,7 +34,7 @@ mpl.rc('patch', linewidth=0.5)
 mpl.rc('text', usetex=True)
 mpl.rc('ps', fonttype=42)
 
-m = Model('%s/models_images/tau%3.0e' % (prefix, 1e6))
+m = ModelOutput('%s/models_images/tau%3.0e.rtout' % (prefix, 1e6))
 
 xmargin = 0.01
 ymargin = 0.01
@@ -107,6 +107,9 @@ for stokes in ['I','linpol']:
                 distance=None
 
             wav, image = m.get_image(distance=distance, inclination=incl/2, stokes=stokes)
+            
+            image = image.swapaxes(0,2)
+            image = image.swapaxes(1,2)
 
             if incl in [0,1]:
                 v = 126-30
@@ -202,7 +205,7 @@ for stokes in ['I','linpol']:
                         ax.set_ylabel('Polarization')
                         
                 ax.xaxis.set_major_formatter(mpl.NullFormatter())
-                if incl % 2 <> 0 or cut <> 0 or stokes is "I":
+                if incl % 2 != 0 or cut != 0 or stokes is "I":
                     ax.yaxis.set_major_formatter(mpl.NullFormatter())
 
         else:
@@ -240,7 +243,7 @@ for stokes in ['I','linpol']:
                     if cut == 0:
                         ax.set_ylabel('Difference')
                 
-                if incl <> 3:
+                if incl != 3:
                     ax.xaxis.set_major_formatter(mpl.NullFormatter())
                 if cut > 0:
                     ax.yaxis.set_major_formatter(mpl.NullFormatter())

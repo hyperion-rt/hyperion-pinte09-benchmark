@@ -14,8 +14,9 @@ import matplotlib.pyplot as mpl
 
 import h5py
 from hyperion.util.constants import au
-from hyperion.util.integrate import interp1d_log10
-from hyperion.model import Model
+from hyperion.util.integrate import interp1d_fast_loglog
+from hyperion.model import ModelOutput
+from hyperion.grid import CylindricalPolarGrid
 
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
@@ -49,32 +50,22 @@ artists = []
 for tau in ['1e3','1e6']:
 
     # Get Hyperion results
-    m = Model(prefix + '/models/tau%3.0e' % float(tau))
-    temperature = m.get_physical_grid('temperature')[0][0,:,:]
+    m = ModelOutput(prefix + '/models/tau%3.0e.rtout' % float(tau))
+    grid = m.get_quantities()
+    temperature = grid['temperature'][0].array[0,:,:]
 
-    # f = h5py.File(prefix + '/models/tau%3.0e.rtout' % float(tau))
-    # temperature = f['Iteration %05i' % (len(f) - 1)]['temperature'][0,0,:,:]
-
-    f = h5py.File(prefix + '/models/tau%3.0e.rtin' % float(tau), 'r')
-
-    if 'w' in f['Grid/Geometry/Walls 1'].dtype.names:
+    if isinstance(grid, CylindricalPolarGrid):
 
         grid_type = 'cylindrical'
 
-        w = f['Grid/Geometry/Walls 1']['w']
-        z = f['Grid/Geometry/Walls 2']['z']
-
-        w = np.array(0.5*(w[1:] + w[:-1])).astype(np.float64)
-        z = np.array(0.5*(z[1:] + z[:-1])).astype(np.float64)
+        w = grid.w
+        z = grid.z
 
     else:
         grid_type = 'spherical'
 
-        r = f['Grid/Geometry/Walls 1']['r']
-        t = f['Grid/Geometry/Walls 2']['t']
-
-        r = np.array(0.5*(r[1:] + r[:-1])).astype(np.float64)
-        t = np.array(0.5*(t[1:] + t[:-1])).astype(np.float64)
+        r = grid.r
+        t = grid.t
 
     temperature = np.array(temperature).astype(np.float64).transpose()
 
@@ -98,8 +89,6 @@ for tau in ['1e3','1e6']:
         tsph1 = np.arctan2(rcyl1, zcyl1)
         temp_vertical1_hyperion = temperature_interp.ev(rsph1, tsph1)
 
-    temp_vertical1_hyperion_i = interp1d_log10(z_vertical1_hyperion, temp_vertical1_hyperion, bounds_error=False)
-
     rcyl2 = np.ones(100) * 200.*au
     zcyl2 = np.linspace(0., 150*au, 100)
 
@@ -112,8 +101,6 @@ for tau in ['1e3','1e6']:
         tsph2 = np.arctan2(rcyl2, zcyl2)
         temp_vertical2_hyperion = temperature_interp.ev(rsph2, tsph2)
 
-    temp_vertical2_hyperion_i = interp1d_log10(z_vertical2_hyperion, temp_vertical2_hyperion, bounds_error=False)
-
     if grid_type == 'cylindrical':
         rcyl3 = w[1:]
         zcyl3 = np.zeros(rcyl3.shape)
@@ -125,62 +112,47 @@ for tau in ['1e3','1e6']:
         r_midplane_hyperion = rsph3 / au
         temp_midplane_hyperion = temperature_interp.ev(rsph3, tsph3)
 
-    temp_midplane_hyperion_i = interp1d_log10(r_midplane_hyperion, temp_midplane_hyperion, bounds_error=False)
-
     # Get MCFOST results
 
     data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Radial_temp_tau=%s.txt' % (tau, tau), dtype=[('r', float), ('temperature', float)])
     r_midplane_mcfost = data['r']
     temp_midplane_mcfost = data['temperature']
-    temp_midplane_mcfost_i = interp1d_log10(r_midplane_mcfost, temp_midplane_mcfost, bounds_error=False)
 
     data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=0.2AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical1_mcfost = data['z']
     temp_vertical1_mcfost = data['temperature']
-    temp_vertical1_mcfost_i = interp1d_log10(z_vertical1_mcfost, temp_vertical1_mcfost, bounds_error=False)
 
     data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=200AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical2_mcfost = data['z']
     temp_vertical2_mcfost = data['temperature']
-    temp_vertical2_mcfost_i = interp1d_log10(z_vertical2_mcfost, temp_vertical2_mcfost, bounds_error=False)
 
     # Get TORUS results
 
     data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_radial.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)])
     r_midplane_torus = data['r']
     temp_midplane_torus = data['temperature']
-    temp_midplane_torus_i = interp1d_log10(r_midplane_torus, temp_midplane_torus, bounds_error=False)
 
     data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert1.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical1_torus = data['z']
     temp_vertical1_torus = data['temperature']
-    temp_vertical1_torus_i = interp1d_log10(z_vertical1_torus, temp_vertical1_torus, bounds_error=False)
 
     data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert2.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical2_torus = data['z']
     temp_vertical2_torus = data['temperature']
-    temp_vertical2_torus_i = interp1d_log10(z_vertical2_torus, temp_vertical2_torus, bounds_error=False)
 
     # Get MCMax results
 
     data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/midplane_temp_tau%s.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)])
     r_midplane_mcmax = data['r']
     temp_midplane_mcmax = data['temperature']
-    temp_midplane_mcmax_i = interp1d_log10(r_midplane_mcmax, temp_midplane_mcmax, bounds_error=False)
 
     data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_0.2AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical1_mcmax = data['z'][::-1]
     temp_vertical1_mcmax = data['temperature'][::-1]
-    temp_vertical1_mcmax_i = interp1d_log10(z_vertical1_mcmax, temp_vertical1_mcmax, bounds_error=False)
 
     data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_200AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
     z_vertical2_mcmax = data['z'][::-1]
     temp_vertical2_mcmax = data['temperature'][::-1]
-    temp_vertical2_mcmax_i = interp1d_log10(z_vertical2_mcmax, temp_vertical2_mcmax, bounds_error=False)
-
-    print temp_vertical1_mcfost_i(0.01)
-    print temp_vertical1_mcmax_i(0.01)
-    print temp_vertical1_torus_i(0.01)
 
     # Find average midplane temperature
 
@@ -190,16 +162,21 @@ for tau in ['1e3','1e6']:
 
     temp_midplane = np.zeros(r_midplane.shape)
 
-    use_hyperion = ~np.isnan(temp_midplane_hyperion_i(r_midplane))
+    temp_midplane_hyperion_i = interp1d_fast_loglog(r_midplane_hyperion, temp_midplane_hyperion, r_midplane, bounds_error=False)
+    temp_midplane_mcfost_i = interp1d_fast_loglog(r_midplane_mcfost, temp_midplane_mcfost, r_midplane, bounds_error=False)
+    temp_midplane_torus_i = interp1d_fast_loglog(r_midplane_torus, temp_midplane_torus, r_midplane, bounds_error=False)
+    temp_midplane_mcmax_i = interp1d_fast_loglog(r_midplane_mcmax, temp_midplane_mcmax, r_midplane, bounds_error=False)
 
-    use_mcfost = ~np.isnan(temp_midplane_mcfost_i(r_midplane))
-    temp_midplane[use_mcfost] += temp_midplane_mcfost_i(r_midplane)[use_mcfost]
+    use_hyperion = ~np.isnan(temp_midplane_hyperion_i)
 
-    use_torus = ~np.isnan(temp_midplane_torus_i(r_midplane))
-    temp_midplane[use_torus] += temp_midplane_torus_i(r_midplane)[use_torus]
+    use_mcfost = ~np.isnan(temp_midplane_mcfost_i)
+    temp_midplane[use_mcfost] += temp_midplane_mcfost_i[use_mcfost]
 
-    use_mcmax = ~np.isnan(temp_midplane_mcmax_i(r_midplane))
-    temp_midplane[use_mcmax] += temp_midplane_mcmax_i(r_midplane)[use_mcmax]
+    use_torus = ~np.isnan(temp_midplane_torus_i)
+    temp_midplane[use_torus] += temp_midplane_torus_i[use_torus]
+
+    use_mcmax = ~np.isnan(temp_midplane_mcmax_i)
+    temp_midplane[use_mcmax] += temp_midplane_mcmax_i[use_mcmax]
 
     temp_midplane /= (use_mcfost.astype(int) + use_torus.astype(int) + use_mcmax.astype(int))
 
@@ -235,10 +212,10 @@ for tau in ['1e3','1e6']:
 
     ax = fig.add_axes([xmin, ymin, dx, dy])
 
-    ax.plot(r_midplane[use_mcfost]-0.1, 100.*(temp_midplane_mcfost_i(r_midplane)[use_mcfost] - temp_midplane[use_mcfost]) / temp_midplane[use_mcfost], color='gray')
-    ax.plot(r_midplane[use_torus]-0.1, 100.*(temp_midplane_torus_i(r_midplane)[use_torus] - temp_midplane[use_torus]) / temp_midplane[use_torus], color='gray')
-    ax.plot(r_midplane[use_mcmax]-0.1, 100.*(temp_midplane_mcmax_i(r_midplane)[use_mcmax] - temp_midplane[use_mcmax]) / temp_midplane[use_mcmax], color='gray')
-    ax.plot(r_midplane[use_hyperion]-0.1, 100.*(temp_midplane_hyperion_i(r_midplane)[use_hyperion] - temp_midplane[use_hyperion])/ temp_midplane[use_hyperion], color='black')
+    ax.plot(r_midplane[use_mcfost]-0.1, 100.*(temp_midplane_mcfost_i[use_mcfost] - temp_midplane[use_mcfost]) / temp_midplane[use_mcfost], color='gray')
+    ax.plot(r_midplane[use_torus]-0.1, 100.*(temp_midplane_torus_i[use_torus] - temp_midplane[use_torus]) / temp_midplane[use_torus], color='gray')
+    ax.plot(r_midplane[use_mcmax]-0.1, 100.*(temp_midplane_mcmax_i[use_mcmax] - temp_midplane[use_mcmax]) / temp_midplane[use_mcmax], color='gray')
+    ax.plot(r_midplane[use_hyperion]-0.1, 100.*(temp_midplane_hyperion_i[use_hyperion] - temp_midplane[use_hyperion])/ temp_midplane[use_hyperion], color='black')
 
     ax.set_xscale('log')
     ax.set_xlim(1.e-6, 400.)
@@ -264,16 +241,21 @@ for tau in ['1e3','1e6']:
 
         temp_vertical1 = np.zeros(z_vertical1.shape)
 
-        use_hyperion = ~np.isnan(temp_vertical1_hyperion_i(z_vertical1))
+        temp_vertical1_hyperion_i = interp1d_fast_loglog(z_vertical1_hyperion, temp_vertical1_hyperion, z_vertical1, bounds_error=False)
+        temp_vertical1_mcfost_i = interp1d_fast_loglog(z_vertical1_mcfost, temp_vertical1_mcfost, z_vertical1, bounds_error=False)
+        temp_vertical1_torus_i = interp1d_fast_loglog(z_vertical1_torus, temp_vertical1_torus, z_vertical1, bounds_error=False)
+        temp_vertical1_mcmax_i = interp1d_fast_loglog(z_vertical1_mcmax, temp_vertical1_mcmax, z_vertical1, bounds_error=False)
 
-        use_mcfost = ~np.isnan(temp_vertical1_mcfost_i(z_vertical1))
-        temp_vertical1[use_mcfost] += temp_vertical1_mcfost_i(z_vertical1)[use_mcfost]
+        use_hyperion = ~np.isnan(temp_vertical1_hyperion_i)
 
-        use_torus = ~np.isnan(temp_vertical1_torus_i(z_vertical1))
-        temp_vertical1[use_torus] += temp_vertical1_torus_i(z_vertical1)[use_torus]
+        use_mcfost = ~np.isnan(temp_vertical1_mcfost_i)
+        temp_vertical1[use_mcfost] += temp_vertical1_mcfost_i[use_mcfost]
 
-        use_mcmax = ~np.isnan(temp_vertical1_mcmax_i(z_vertical1))
-        temp_vertical1[use_mcmax] += temp_vertical1_mcmax_i(z_vertical1)[use_mcmax]
+        use_torus = ~np.isnan(temp_vertical1_torus_i)
+        temp_vertical1[use_torus] += temp_vertical1_torus_i[use_torus]
+
+        use_mcmax = ~np.isnan(temp_vertical1_mcmax_i)
+        temp_vertical1[use_mcmax] += temp_vertical1_mcmax_i[use_mcmax]
 
         temp_vertical1 /= (use_mcfost.astype(int) + use_torus.astype(int) + use_mcmax.astype(int))
 
@@ -306,10 +288,10 @@ for tau in ['1e3','1e6']:
 
         ax = fig.add_axes([xmin, ymin, dx, dy])
 
-        ax.plot(z_vertical1[use_mcfost], 100.*(temp_vertical1_mcfost_i(z_vertical1)[use_mcfost] - temp_vertical1[use_mcfost]) / temp_vertical1[use_mcfost], color='gray')
-        ax.plot(z_vertical1[use_torus], 100.*(temp_vertical1_torus_i(z_vertical1)[use_torus] - temp_vertical1[use_torus]) / temp_vertical1[use_torus], color='gray')
-        ax.plot(z_vertical1[use_mcmax], 100.*(temp_vertical1_mcmax_i(z_vertical1)[use_mcmax] - temp_vertical1[use_mcmax]) / temp_vertical1[use_mcmax], color='gray')
-        ax.plot(z_vertical1[use_hyperion], 100.*(temp_vertical1_hyperion_i(z_vertical1)[use_hyperion] - temp_vertical1[use_hyperion])/ temp_vertical1[use_hyperion], color='black')
+        ax.plot(z_vertical1[use_mcfost], 100.*(temp_vertical1_mcfost_i[use_mcfost] - temp_vertical1[use_mcfost]) / temp_vertical1[use_mcfost], color='gray')
+        ax.plot(z_vertical1[use_torus], 100.*(temp_vertical1_torus_i[use_torus] - temp_vertical1[use_torus]) / temp_vertical1[use_torus], color='gray')
+        ax.plot(z_vertical1[use_mcmax], 100.*(temp_vertical1_mcmax_i[use_mcmax] - temp_vertical1[use_mcmax]) / temp_vertical1[use_mcmax], color='gray')
+        ax.plot(z_vertical1[use_hyperion], 100.*(temp_vertical1_hyperion_i[use_hyperion] - temp_vertical1[use_hyperion])/ temp_vertical1[use_hyperion], color='black')
 
         ax.set_xlim(0.,0.065)
         ax.set_xlabel('z (AU)')
@@ -329,16 +311,21 @@ for tau in ['1e3','1e6']:
 
         temp_vertical2 = np.zeros(z_vertical2.shape)
 
-        use_hyperion = ~np.isnan(temp_vertical2_hyperion_i(z_vertical2))
+        temp_vertical2_hyperion_i = interp1d_fast_loglog(z_vertical2_hyperion, temp_vertical2_hyperion, z_vertical2, bounds_error=False)
+        temp_vertical2_mcfost_i = interp1d_fast_loglog(z_vertical2_mcfost, temp_vertical2_mcfost, z_vertical2, bounds_error=False)
+        temp_vertical2_torus_i = interp1d_fast_loglog(z_vertical2_torus, temp_vertical2_torus, z_vertical2, bounds_error=False)
+        temp_vertical2_mcmax_i = interp1d_fast_loglog(z_vertical2_mcmax, temp_vertical2_mcmax, z_vertical2, bounds_error=False)
 
-        use_mcfost = ~np.isnan(temp_vertical2_mcfost_i(z_vertical2))
-        temp_vertical2[use_mcfost] += temp_vertical2_mcfost_i(z_vertical2)[use_mcfost]
+        use_hyperion = ~np.isnan(temp_vertical2_hyperion_i)
 
-        use_torus = ~np.isnan(temp_vertical2_torus_i(z_vertical2))
-        temp_vertical2[use_torus] += temp_vertical2_torus_i(z_vertical2)[use_torus]
+        use_mcfost = ~np.isnan(temp_vertical2_mcfost_i)
+        temp_vertical2[use_mcfost] += temp_vertical2_mcfost_i[use_mcfost]
 
-        use_mcmax = ~np.isnan(temp_vertical2_mcmax_i(z_vertical2))
-        temp_vertical2[use_mcmax] += temp_vertical2_mcmax_i(z_vertical2)[use_mcmax]
+        use_torus = ~np.isnan(temp_vertical2_torus_i)
+        temp_vertical2[use_torus] += temp_vertical2_torus_i[use_torus]
+
+        use_mcmax = ~np.isnan(temp_vertical2_mcmax_i)
+        temp_vertical2[use_mcmax] += temp_vertical2_mcmax_i[use_mcmax]
 
         temp_vertical2 /= (use_mcfost.astype(int) + use_torus.astype(int) + use_mcmax.astype(int))
 
@@ -371,10 +358,10 @@ for tau in ['1e3','1e6']:
 
         ax = fig.add_axes([xmin, ymin, dx, dy])
 
-        ax.plot(z_vertical2[use_mcfost], 100.*(temp_vertical2_mcfost_i(z_vertical2)[use_mcfost] - temp_vertical2[use_mcfost]) / temp_vertical2[use_mcfost], color='gray')
-        ax.plot(z_vertical2[use_torus], 100.*(temp_vertical2_torus_i(z_vertical2)[use_torus] - temp_vertical2[use_torus]) / temp_vertical2[use_torus], color='gray')
-        ax.plot(z_vertical2[use_mcmax], 100.*(temp_vertical2_mcmax_i(z_vertical2)[use_mcmax] - temp_vertical2[use_mcmax]) / temp_vertical2[use_mcmax], color='gray')
-        ax.plot(z_vertical2[use_hyperion], 100.*(temp_vertical2_hyperion_i(z_vertical2)[use_hyperion] - temp_vertical2[use_hyperion])/ temp_vertical2[use_hyperion], color='black')
+        ax.plot(z_vertical2[use_mcfost], 100.*(temp_vertical2_mcfost_i[use_mcfost] - temp_vertical2[use_mcfost]) / temp_vertical2[use_mcfost], color='gray')
+        ax.plot(z_vertical2[use_torus], 100.*(temp_vertical2_torus_i[use_torus] - temp_vertical2[use_torus]) / temp_vertical2[use_torus], color='gray')
+        ax.plot(z_vertical2[use_mcmax], 100.*(temp_vertical2_mcmax_i[use_mcmax] - temp_vertical2[use_mcmax]) / temp_vertical2[use_mcmax], color='gray')
+        ax.plot(z_vertical2[use_hyperion], 100.*(temp_vertical2_hyperion_i[use_hyperion] - temp_vertical2[use_hyperion])/ temp_vertical2[use_hyperion], color='black')
 
         ax.set_xlim(0.,150.)
         ax.set_xlabel('z (AU)')
