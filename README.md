@@ -56,3 +56,26 @@ The default Snakemake options in `profiles/default/config.yaml` run one model
 at a time and only re-run a model if its output is missing or older than its
 input, so to deliberately re-run a model either delete its output or use
 `--forcerun`.
+
+## Remaking plots
+
+Since editing a script does not cause anything to be re-run, a plot has to be
+explicitly remade after changing one of the plotting scripts. None of the
+following re-run the models, provided that the model output is already there.
+
+To remake one kind of plot for both grid geometries, force the rule that makes
+it, which is one of `plot_seds`, `plot_temperatures` or `plot_images`:
+
+    snakemake --forcerun plot_seds
+
+To remake the plots for a single grid geometry, give one of the files and use
+`--force`:
+
+    snakemake 0.9.12/sph/plots/seds.png --force
+
+Alternatively, delete the plots to remake and run `snakemake` again, which
+only produces the files that are missing.
+
+For the fast results, add `--config profile=fast` at the end of the command
+and use the paths in the `_fast` directory. To check which steps would be run
+without running anything, add `-n` to any of these commands.
