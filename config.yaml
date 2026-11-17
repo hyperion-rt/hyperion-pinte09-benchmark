@@ -28,3 +28,26 @@ profiles:
         raytracing_sources: 10_000_000
         raytracing_dust: 10_000_000
         stats: 100_000
+
+  # Much cheaper settings (around a minute per model on 8 cores) that are only
+  # intended to check that the whole workflow runs. The results are noisy and
+  # the temperatures are not converged, so they should not be used to judge
+  # the agreement with the other codes.
+  fast:
+    models:
+      grid: [99, 79]
+      n_initial_iterations: 2
+      n_photons:
+        initial: 50_000
+        imaging_sources: 2_000
+        imaging_dust: 2_000
+        raytracing_sources: 5_000
+        raytracing_dust: 5_000
+        stats: 100_000
+    images:
+      n_photons:
+        imaging_sources: 100_000
+        imaging_dust: 300_000
+        raytracing_sources: 20_000
+        raytracing_dust: 20_000
+        stats: 100_000
