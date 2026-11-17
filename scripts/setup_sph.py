@@ -6,14 +6,9 @@ from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
-from hyperion.util.functions import create_dir
-
 prefix = 'sph_0.9.5'
 
-if not os.path.exists(prefix):
-    create_dir(prefix)
-
-create_dir('%s/models' % prefix)
+os.makedirs('%s/models' % prefix, exist_ok=True)
 
 for i, tau in enumerate([1e3, 1e4, 1e5, 1e6]):
 

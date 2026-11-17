@@ -6,14 +6,9 @@ from hyperion.model import Model
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
-from hyperion.util.functions import create_dir
-
 prefix = 'sph_0.8.10'
 
-if not os.path.exists(prefix):
-    create_dir(prefix)
-
-create_dir('%s/models_images' % prefix)
+os.makedirs('%s/models_images' % prefix, exist_ok=True)
 
 for i, tau in enumerate([1e6]):
 
