@@ -14,7 +14,7 @@ import matplotlib.pyplot as mpl
 
 import h5py
 from hyperion.util.constants import au
-from hyperion.util.integrate import interp1d_fast_loglog
+from hyperion.util.interpolate import interp1d_fast_loglog
 from hyperion.model import ModelOutput
 from hyperion.grid import CylindricalPolarGrid
 
@@ -114,43 +114,43 @@ for tau in ['1e3','1e6']:
 
     # Get MCFOST results
 
-    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Radial_temp_tau=%s.txt' % (tau, tau), dtype=[('r', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Radial_temp_tau=%s.txt' % (tau, tau), dtype=[('r', float), ('temperature', float)], usecols=[0, 1])
     r_midplane_mcfost = data['r']
     temp_midplane_mcfost = data['temperature']
 
-    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=0.2AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=0.2AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical1_mcfost = data['z']
     temp_vertical1_mcfost = data['temperature']
 
-    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=200AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcfost/tau=%s_aniso/T/Vertical_temp_R=200AU_tau=%s.txt' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical2_mcfost = data['z']
     temp_vertical2_mcfost = data['temperature']
 
     # Get TORUS results
 
-    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_radial.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_radial.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)], usecols=[0, 1])
     r_midplane_torus = data['r']
     temp_midplane_torus = data['temperature']
 
-    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert1.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert1.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical1_torus = data['z']
     temp_vertical1_torus = data['temperature']
 
-    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert2.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/torus/tau=%s_aniso/T/tau=%s_aniso_vert2.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical2_torus = data['z']
     temp_vertical2_torus = data['temperature']
 
     # Get MCMax results
 
-    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/midplane_temp_tau%s.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/midplane_temp_tau%s.dat' % (tau, tau), dtype=[('r', float), ('temperature', float)], usecols=[0, 1])
     r_midplane_mcmax = data['r']
     temp_midplane_mcmax = data['temperature']
 
-    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_0.2AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_0.2AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical1_mcmax = data['z'][::-1]
     temp_vertical1_mcmax = data['temperature'][::-1]
 
-    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_200AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)])
+    data = np.loadtxt('benchmark/mcmax/tau=%s_aniso/T/vertical_temp_200AU_tau%s.dat' % (tau, tau), dtype=[('z', float), ('temperature', float)], usecols=[0, 1])
     z_vertical2_mcmax = data['z'][::-1]
     temp_vertical2_mcmax = data['temperature'][::-1]
 

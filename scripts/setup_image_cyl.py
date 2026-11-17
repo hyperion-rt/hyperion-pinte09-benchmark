@@ -6,14 +6,9 @@ from hyperion.model import Model
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
-from hyperion.util.functions import create_dir
+prefix = 'cyl_0.9.12'
 
-prefix = 'cyl_0.8.10'
-
-if not os.path.exists(prefix):
-    create_dir(prefix)
-
-create_dir('%s/models_images' % prefix)
+os.makedirs('%s/models_images' % prefix, exist_ok=True)
 
 for i, tau in enumerate([1e6]):
     
@@ -50,6 +45,7 @@ for i, tau in enumerate([1e6]):
     image.set_image_limits(-450.*au, 450.*au, -450.*au, 450.*au)
     image.set_aperture_range(1, 450.*au, 450.*au)
     image.set_wavelength_range(1, 0.9, 1.1)
+    image.set_stokes(True)
 
     m.set_raytracing(True)
 
