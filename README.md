@@ -46,8 +46,13 @@ example:
 
     snakemake 0.9.12/sph/plots/temperatures.png
 
-The number of MPI processes per run is set by `mpi_processes` in
-`config.yaml`. The default Snakemake options in `profiles/default/config.yaml`
-run one model at a time and only re-run a model if its output is missing or
-older than its input, so to deliberately re-run a model either delete its
-output or use `--forcerun`.
+Any files to produce have to be given before `--config` on the command line.
+
+By default each model is run with as many MPI processes as there are cores on
+the machine. To use fewer, either limit the cores available to Snakemake with
+e.g. `--cores 8`, or set `mpi_processes` to a number in `config.yaml`.
+
+The default Snakemake options in `profiles/default/config.yaml` run one model
+at a time and only re-run a model if its output is missing or older than its
+input, so to deliberately re-run a model either delete its output or use
+`--forcerun`.

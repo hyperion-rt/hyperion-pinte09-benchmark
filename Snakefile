@@ -20,6 +20,14 @@ LABEL = str(config["version"])
 if PROFILE != "full":
     LABEL += "_" + PROFILE
 
+# Number of MPI processes for each Hyperion run, which can be set to "all" to
+# use all the cores that Snakemake has been given with --cores
+MPI_PROCESSES = config.get("mpi_processes", "all")
+if MPI_PROCESSES == "all":
+    MPI_PROCESSES = workflow.cores
+else:
+    MPI_PROCESSES = int(MPI_PROCESSES)
+
 RUN = LABEL + "/{geometry}"
 PLOTS = RUN + "/plots"
 
@@ -75,7 +83,7 @@ rule run_hyperion:
         RUN + "/{kind}/tau{tau}.rtout",
     log:
         RUN + "/{kind}/tau{tau}.log",
-    threads: config["mpi_processes"]
+    threads: MPI_PROCESSES
     resources:
         mpi_jobs=1,
     shell:
