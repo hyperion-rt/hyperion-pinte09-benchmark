@@ -6,7 +6,7 @@ from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
-prefix = 'sph_0.9.5'
+prefix = 'sph_0.9.12'
 
 os.makedirs('%s/models' % prefix, exist_ok=True)
 

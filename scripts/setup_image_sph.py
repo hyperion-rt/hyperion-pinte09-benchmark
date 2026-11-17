@@ -6,7 +6,7 @@ from hyperion.model import Model
 from hyperion.util.constants import rsun, pi, sigma, au, msun
 from hyperion.dust import SphericalDust
 
-prefix = 'sph_0.8.10'
+prefix = 'sph_0.9.12'
 
 os.makedirs('%s/models_images' % prefix, exist_ok=True)
 

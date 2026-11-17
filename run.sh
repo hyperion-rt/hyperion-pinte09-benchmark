@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-VERSION="0.8.0"
+VERSION="0.9.12"
 
 # SPHERICAL
 
