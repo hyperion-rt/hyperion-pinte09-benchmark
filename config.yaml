@@ -1,0 +1,55 @@
+# Label for the Hyperion version being benchmarked. This is only used to name
+# the output directory, e.g. 0.9.12 (or 0.9.12_fast for the fast profile).
+version: "0.9.12"
+
+# Number of MPI processes to use for each Hyperion run. This can be a number,
+# or "all" to use all the cores available to Snakemake, which is all the cores
+# on the machine unless --cores is given.
+mpi_processes: all
+
+# Settings that control the cost of the runs. The profile to use is selected
+# on the command line with e.g. --config profile=fast, and defaults to full.
+profiles:
+
+  # The settings used for the published benchmark results.
+  full:
+    models:
+      grid: [399, 299]
+      n_initial_iterations: 10
+      n_photons:
+        initial: 100_000_000
+        imaging_sources: 10_000_000
+        imaging_dust: 200_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 1_000_000
+    images:
+      n_photons:
+        imaging_sources: 1_000_000_000
+        imaging_dust: 20_000_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 100_000
+
+  # Much cheaper settings (around a minute per model on 8 cores) that are only
+  # intended to check that the whole workflow runs. The results are noisy and
+  # the temperatures are not converged, so they should not be used to judge
+  # the agreement with the other codes.
+  fast:
+    models:
+      grid: [99, 79]
+      n_initial_iterations: 2
+      n_photons:
+        initial: 50_000
+        imaging_sources: 2_000
+        imaging_dust: 2_000
+        raytracing_sources: 5_000
+        raytracing_dust: 5_000
+        stats: 100_000
+    images:
+      n_photons:
+        imaging_sources: 100_000
+        imaging_dust: 300_000
+        raytracing_sources: 20_000
+        raytracing_dust: 20_000
+        stats: 100_000
