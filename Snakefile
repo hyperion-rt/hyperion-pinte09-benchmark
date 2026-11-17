@@ -11,15 +11,17 @@ if PROFILE not in config["profiles"]:
 
 SETTINGS = config["profiles"][PROFILE]
 
-# Results for the full profile go in e.g. sph_0.9.12, and results for any
-# other profile go in e.g. sph_0.9.12_fast, so that reduced runs can never be
-# mistaken for (or overwrite) the real benchmark results.
+# All the output for the full profile goes in a directory named after the
+# version, e.g. 0.9.12, and the output for any other profile goes in e.g.
+# 0.9.12_fast, so that reduced runs can never be mistaken for (or overwrite)
+# the real benchmark results. Inside this there is one directory for each
+# grid geometry, containing the models, the image models and the plots.
 LABEL = str(config["version"])
 if PROFILE != "full":
     LABEL += "_" + PROFILE
 
-RUN = "{geometry}_" + LABEL
-PLOTS = "plots_{geometry}_" + LABEL
+RUN = LABEL + "/{geometry}"
+PLOTS = RUN + "/plots"
 
 GEOMETRIES = ["sph", "cyl"]
 TAUS = ["1e+03", "1e+04", "1e+05", "1e+06"]

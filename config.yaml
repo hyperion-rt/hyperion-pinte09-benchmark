@@ -1,5 +1,5 @@
 # Label for the Hyperion version being benchmarked. This is only used to name
-# the output directories, e.g. sph_0.9.12 and plots_sph_0.9.12.
+# the output directory, e.g. 0.9.12 (or 0.9.12_fast for the fast profile).
 version: "0.9.12"
 
 # Number of MPI processes to use for each Hyperion run.
