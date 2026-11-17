@@ -17,7 +17,7 @@ from hyperion.util.constants import pc
 
 import numpy as np
 
-import pyfits
+from astropy.io import fits as pyfits
 
 # Set matplotlib preferences
 mpl.rc('axes', titlesize='x-small')
@@ -106,7 +106,7 @@ for stokes in ['I','linpol']:
             else:
                 distance=None
 
-            wav, image = m.get_image(distance=distance, inclination=incl/2, stokes=stokes)
+            wav, image = m.get_image(distance=distance, inclination=incl//2, stokes=stokes)
             
             image = image.swapaxes(0,2)
             image = image.swapaxes(1,2)

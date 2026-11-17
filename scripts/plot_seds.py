@@ -52,7 +52,7 @@ vf[81] = 81.4
 vf[87] = 87.1
 
 def get_sed(filename):
-    sedfile = np.loadtxt(filename, dtype=[('wav', float), ('flux', float)])
+    sedfile = np.loadtxt(filename, dtype=[('wav', float), ('flux', float)], usecols=[0, 1])
     wav = sedfile['wav']
     sed = sedfile['flux']*1000.
     return wav, sed
