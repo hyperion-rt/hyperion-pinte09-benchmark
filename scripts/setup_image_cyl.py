@@ -45,6 +45,7 @@ for i, tau in enumerate([1e6]):
     image.set_image_limits(-450.*au, 450.*au, -450.*au, 450.*au)
     image.set_aperture_range(1, 450.*au, 450.*au)
     image.set_wavelength_range(1, 0.9, 1.1)
+    image.set_stokes(True)
 
     m.set_raytracing(True)
 
