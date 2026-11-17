@@ -1,0 +1,14 @@
+# Default command-line options for Snakemake, picked up automatically when
+# running snakemake from the top level of this repository.
+
+cores: all
+
+# Only re-run a model if its output is missing or older than its input, and
+# not because a script or setting changed, since the full models are very
+# expensive. Use --forcerun or delete the output to deliberately re-run.
+rerun-triggers: mtime
+
+# Each Hyperion run uses one unit of mpi_jobs, so this is the number of MPI
+# runs that can be in progress at the same time.
+resources:
+  - mpi_jobs=1
