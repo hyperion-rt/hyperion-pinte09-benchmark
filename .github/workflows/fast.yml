@@ -51,7 +51,7 @@ jobs:
         working-directory: hyperion
         run: |
           ./configure
-          make sph_mpi cyl_mpi
+          make -j"$(nproc)" sph_mpi cyl_mpi
           echo "$PWD/bin" >> "$GITHUB_PATH"
 
       - name: Install Python dependencies

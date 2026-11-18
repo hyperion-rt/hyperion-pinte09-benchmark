@@ -30,7 +30,7 @@ RUN git clone ${HYPERION_REPOSITORY} /opt/hyperion \
     && git checkout ${HYPERION_REF} \
     && git submodule update --init \
     && ./configure --prefix=/usr/local \
-    && make sph_mpi cyl_mpi \
+    && make -j"$(nproc)" sph_mpi cyl_mpi \
     && make install \
     && pip install --no-cache-dir . \
     && echo "ref: ${HYPERION_REF}" > /etc/hyperion-version \
