@@ -64,7 +64,7 @@ other requirements, for example with [Podman](https://podman.io). The version
 of Hyperion to build is set with `HYPERION_REF`, which can be a tag, a branch
 or a commit, and defaults to `main`:
 
-    podman build --build-arg HYPERION_REF=v0.9.11 -t hyperion-benchmark:0.9.11 .
+    podman build --build-arg HYPERION_REF=v0.9.12 -t hyperion-benchmark:0.9.12 .
 
 If `HYPERION_REF` is a branch, building again re-uses the previous build
 rather than picking up new commits, so in that case either add `--no-cache` or
@@ -75,7 +75,7 @@ The benchmark is not included in the image, so the repository has to be
 mounted when running the workflow, and the output is then written to the
 repository as usual:
 
-    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:0.9.11 \
+    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:0.9.12 \
         snakemake --config profile=fast
 
 The `--shm-size` option is needed because the default amount of shared memory
