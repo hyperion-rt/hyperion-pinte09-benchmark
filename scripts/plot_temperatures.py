@@ -373,5 +373,5 @@ for tau in ['1e3','1e6']:
         artist = ax.text(-0.13, 0.5, r'Difference (\%)', rotation='vertical', ha='center', va='center', transform=ax.transAxes, size='x-small')
         artists.append(artist)
 
-fig.savefig('%s/temperatures.eps' % output, bbox_inches='tight', bbox_extra_artists=artists)
+fig.savefig('%s/temperatures.pdf' % output, bbox_inches='tight', bbox_extra_artists=artists)
 fig.savefig('%s/temperatures.png' % output, bbox_inches='tight', bbox_extra_artists=artists)
