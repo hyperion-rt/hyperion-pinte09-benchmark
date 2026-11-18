@@ -21,8 +21,8 @@ The workflow is defined in `Snakefile` and configured in `config.yaml`. Before
 running, set `version` in `config.yaml` to a label for the version of Hyperion
 being tested, since this is used to name the output directory.
 
-To check that everything runs, use the fast profile, which takes around a
-minute per model on 8 cores:
+To check that everything runs, use the fast profile, which takes around 40
+seconds per model on 8 cores:
 
     snakemake --config profile=fast
 
