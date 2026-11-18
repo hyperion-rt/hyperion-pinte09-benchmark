@@ -57,6 +57,31 @@ at a time and only re-run a model if its output is missing or older than its
 input, so to deliberately re-run a model either delete its output or use
 `--forcerun`.
 
+## Running in a container
+
+The `Containerfile` can be used to build an image with Hyperion and all the
+other requirements, for example with [Podman](https://podman.io). The version
+of Hyperion to build is set with `HYPERION_REF`, which can be a tag, a branch
+or a commit, and defaults to `main`:
+
+    podman build --build-arg HYPERION_REF=v0.9.11 -t hyperion-benchmark:0.9.11 .
+
+If `HYPERION_REF` is a branch, building again re-uses the previous build
+rather than picking up new commits, so in that case either add `--no-cache` or
+give the commit instead. The version that was built is recorded in
+`/etc/hyperion-version` inside the image.
+
+The benchmark is not included in the image, so the repository has to be
+mounted when running the workflow, and the output is then written to the
+repository as usual:
+
+    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:0.9.11 \
+        snakemake --config profile=fast
+
+The `--shm-size` option is needed because the default amount of shared memory
+in a container is too small to start a large number of MPI processes. Leaving
+out the `snakemake` command gives a shell inside the container instead.
+
 ## Remaking plots
 
 Since editing a script does not cause anything to be re-run, a plot has to be
