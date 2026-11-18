@@ -248,6 +248,6 @@ for stokes in ['I','linpol']:
                 if cut > 0:
                     ax.yaxis.set_major_formatter(mpl.NullFormatter())
 
-    fig.savefig('%s/images_%s.eps' % (output, stokes), bbox_inches='tight')
+    fig.savefig('%s/images_%s.pdf' % (output, stokes), bbox_inches='tight')
     fig.savefig('%s/images_%s.png' % (output, stokes), bbox_inches='tight')
 

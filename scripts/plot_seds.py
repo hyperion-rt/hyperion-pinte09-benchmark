@@ -153,6 +153,6 @@ for i, tau in enumerate(tau_string):
         ax2.yaxis.set_major_formatter(mpl.NullFormatter())
     ax2.text(0.975, 0.95, r'$\tau_{I}=10^%i$' % (i+3), ha='right', va='top', transform = ax2.transAxes, size='small')
 
-fig.savefig('%s/seds.eps' % output, bbox_inches='tight', bbox_extra_artists=artists)
+fig.savefig('%s/seds.pdf' % output, bbox_inches='tight', bbox_extra_artists=artists)
 fig.savefig('%s/seds.png' % output, bbox_inches='tight', bbox_extra_artists=artists)
 

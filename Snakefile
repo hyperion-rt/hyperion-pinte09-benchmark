@@ -33,7 +33,7 @@ PLOTS = RUN + "/plots"
 
 GEOMETRIES = ["sph", "cyl"]
 TAUS = ["1e+03", "1e+04", "1e+05", "1e+06"]
-FORMATS = ["png", "eps"]
+FORMATS = ["png", "pdf"]
 
 
 wildcard_constraints:
