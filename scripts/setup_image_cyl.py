@@ -44,6 +44,12 @@ image.set_aperture_range(1, 450.*au, 450.*au)
 image.set_wavelength_range(1, 0.9, 1.1)
 image.set_stokes(True)
 
+# Record the flux from each origin (source or dust, emitted or scattered) as
+# well as the uncertainties, so that the signal-to-noise of each component can
+# be checked
+image.set_track_origin('basic')
+image.set_uncertainties(True)
+
 m.set_raytracing(True)
 
 m.set_n_initial_iterations(0)
