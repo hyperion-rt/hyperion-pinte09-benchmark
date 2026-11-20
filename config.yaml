@@ -31,6 +31,34 @@ profiles:
         raytracing_dust: 10_000_000
         stats: 100_000
 
+  # The same settings as the full profile but with fewer photons emitted by
+  # the dust when computing the SEDs and images, which is where most of the
+  # time is spent. Since the dust photons are forced to scatter until their
+  # energy is negligible, far fewer are needed than for the published results,
+  # which were computed with an earlier algorithm. This should only increase
+  # the noise in the SEDs at 2-10 microns, by a factor of about three. The
+  # images are only computed at 1 micron, where dust emission contributes less
+  # than 1% of the flux, so the number of dust photons for these is reduced
+  # further.
+  reduced:
+    models:
+      grid: [399, 299]
+      n_initial_iterations: 10
+      n_photons:
+        initial: 100_000_000
+        imaging_sources: 10_000_000
+        imaging_dust: 20_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 1_000_000
+    images:
+      n_photons:
+        imaging_sources: 1_000_000_000
+        imaging_dust: 200_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 100_000
+
   # Much cheaper settings (around 40 seconds per model on 8 cores) that are only
   # intended to check that the whole workflow runs. The results are noisy and
   # the temperatures are not converged, so they should not be used to judge

@@ -41,6 +41,14 @@ This is very expensive: the original runs took of order 350 CPU hours per
 model, and there are ten models (four optical depths and one image model for
 each of the spherical and cylindrical polar grids).
 
+The reduced profile uses the same settings as the full benchmark but far fewer
+photons emitted by the dust, which is where most of the time is spent, at the
+cost of somewhat noisier SEDs between about 2 and 10 microns:
+
+    snakemake --config profile=reduced
+
+The results are written to a separate directory ending in `_reduced`.
+
 A subset of the results can be requested by giving the files to produce, for
 example:
 
