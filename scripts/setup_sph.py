@@ -93,4 +93,11 @@ m.set_n_photons(**settings['n_photons'])
 
 m.set_max_interactions(10000000)
 
+# Stop integrating the optical depth for peeled photons beyond tau=100, which
+# makes the imaging much faster in these very optically thick models and only
+# neglects contributions attenuated by more than exp(-100). This option is not
+# available in older versions of Hyperion.
+if hasattr(m, 'set_max_peeloff_optical_depth'):
+    m.set_max_peeloff_optical_depth(100.)
+
 m.write(snakemake.output[0])
