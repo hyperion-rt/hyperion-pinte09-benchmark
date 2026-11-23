@@ -60,6 +60,7 @@ rule setup_model:
         RUN + "/models/tau{tau}.rtin",
     params:
         settings=SETTINGS["models"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
         "scripts/setup_{wildcards.geometry}.py"
 
@@ -72,6 +73,7 @@ rule setup_image:
         RUN + "/models_images/tau1e+06.rtin",
     params:
         settings=SETTINGS["images"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
         "scripts/setup_image_{wildcards.geometry}.py"
 

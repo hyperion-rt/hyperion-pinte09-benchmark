@@ -9,10 +9,37 @@ mpi_processes: all
 
 # Settings that control the cost of the runs. The profile to use is selected
 # on the command line with e.g. --config profile=fast, and defaults to full.
+#
+# In each profile, optical_depth_limits sets three options that make the
+# imaging much faster in these very optically thick models, and that are
+# ignored with versions of Hyperion that do not support them (before v1.0.0b2):
+#
+# - max_peeloff_optical_depth: the optical depth beyond which the optical
+#   depth is no longer integrated for peeled photons, since their contribution
+#   is then negligible (attenuated by more than exp(-100) for 100).
+#
+# - escape_rays_per_cell: the average number of rays started in each cell to
+#   estimate the minimum column density to escape the grid from each cell.
+#   Photons in cells where the minimum optical depth to escape is larger than
+#   max_peeloff_optical_depth are then not peeled off at all.
+#
+# - emission_max_escape_optical_depth: dust photons are not emitted from cells
+#   where the minimum optical depth to escape at the wavelength being computed
+#   is larger than this. In the most optically thick models, most of the dust
+#   emission at near- and mid-infrared wavelengths comes from cells in the
+#   midplane that photons cannot escape from, so this greatly improves the
+#   signal-to-noise for a given number of photons. Photons emitted in the
+#   excluded cells could only contribute after scattering outwards through a
+#   large optical depth, so this should be sufficiently larger than
+#   max_peeloff_optical_depth (twice as large is enough here).
 profiles:
 
   # The settings used for the published benchmark results.
   full:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
     models:
       grid: [399, 299]
       n_initial_iterations: 10
@@ -33,10 +60,16 @@ profiles:
 
   # Much cheaper settings for checking a version of Hyperion, with ten times
   # fewer photons for the temperature calculation and many fewer photons for
-  # the SEDs and images than the full profile. The results are noisier, and
+  # the SEDs and images than the full profile. This is only possible because
+  # of the optical depth limits (in particular emission_max_escape_optical_depth),
+  # so with older versions of Hyperion the results are much noisier. Even so,
   # the SEDs are noticeably noisier at mid-infrared wavelengths for the most
   # edge-on viewing angle of the most optically thick model.
   reduced:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
     models:
       grid: [399, 299]
       n_initial_iterations: 10
@@ -60,6 +93,10 @@ profiles:
   # the temperatures are not converged, so they should not be used to judge
   # the agreement with the other codes.
   fast:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
     models:
       grid: [99, 79]
       n_initial_iterations: 2

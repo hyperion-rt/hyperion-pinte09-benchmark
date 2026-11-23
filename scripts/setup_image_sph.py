@@ -58,18 +58,23 @@ m.set_n_initial_iterations(0)
 # the new auto (twice as much resolution at the midplane as at the poles)
 # gives a much beter agreement
 
-m.set_monochromatic(True, wavelengths=np.array([1.]))
+# Limits on the optical depths for peeled photons and for emitting dust
+# photons, which make the imaging much faster in these very optically thick
+# models (see config.yaml for details). These options are not available in
+# older versions of Hyperion, in which case they are not used.
+limits = snakemake.params.optical_depth_limits
+mono_kwargs = {}
+if hasattr(m, 'set_max_peeloff_optical_depth'):
+    m.set_max_peeloff_optical_depth(limits['max_peeloff_optical_depth'])
+if hasattr(m, 'set_compute_escape_column_density'):
+    m.set_compute_escape_column_density(True, rays_per_cell=limits['escape_rays_per_cell'])
+    mono_kwargs['emission_max_escape_optical_depth'] = limits['emission_max_escape_optical_depth']
+
+m.set_monochromatic(True, wavelengths=np.array([1.]), **mono_kwargs)
 
 m.set_mrw(True, gamma=2.)
 m.set_pda(True)
 m.set_n_photons(**settings['n_photons'])
 m.set_max_interactions(10000)
-
-# Stop integrating the optical depth for peeled photons beyond tau=100, which
-# makes the imaging much faster in these very optically thick models and only
-# neglects contributions attenuated by more than exp(-100). This option is not
-# available in older versions of Hyperion.
-if hasattr(m, 'set_max_peeloff_optical_depth'):
-    m.set_max_peeloff_optical_depth(100.)
 
 m.write(snakemake.output[0])
