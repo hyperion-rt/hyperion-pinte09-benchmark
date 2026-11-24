@@ -62,7 +62,7 @@ rule setup_model:
         settings=SETTINGS["models"],
         optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
-        "scripts/setup_{wildcards.geometry}.py"
+        "scripts/setup_model.py"
 
 
 # The image models re-use the temperatures from the most optically thick model
@@ -75,7 +75,7 @@ rule setup_image:
         settings=SETTINGS["images"],
         optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
-        "scripts/setup_image_{wildcards.geometry}.py"
+        "scripts/setup_image.py"
 
 
 rule run_hyperion:
