@@ -54,7 +54,19 @@ def model_from_temperatures(filename):
     m.use_geometry(filename)
     m.use_quantities(filename)
     m.set_n_initial_iterations(0)
+    set_output(m)
     return m
+
+
+def set_output(m):
+    """
+    Don't copy the input (which includes the dust properties) into the
+    output file, which instead links to the input file, so that the output
+    files are small enough to keep. The SEDs and images can be read from the
+    output file alone, but the input file is needed to read the grid and
+    temperatures.
+    """
+    m.set_copy_input(False)
 
 
 def add_sed(m):

@@ -8,7 +8,7 @@ from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import au, msun
 from hyperion.dust import SphericalDust
 
-from common import WAVELENGTHS, set_star, add_sed, set_optical_depth_limits
+from common import WAVELENGTHS, set_star, add_sed, set_optical_depth_limits, set_output
 
 tau = float(snakemake.wildcards.tau)
 geometry = snakemake.wildcards.geometry
@@ -70,5 +70,7 @@ m.set_pda(True)
 m.set_n_photons(**settings['n_photons'])
 
 m.set_max_interactions(10000000)
+
+set_output(m)
 
 m.write(snakemake.output[0])
