@@ -8,7 +8,7 @@ from hyperion.model import AnalyticalYSOModel
 from hyperion.util.constants import au, msun
 from hyperion.dust import SphericalDust
 
-from common import WAVELENGTHS, set_star, add_sed, set_optical_depth_limits, set_output
+from common import DUST_FILE, WAVELENGTHS, set_star, add_sed, set_optical_depth_limits, write
 
 tau = float(snakemake.wildcards.tau)
 geometry = snakemake.wildcards.geometry
@@ -39,11 +39,7 @@ disk.r_0 = 100. * au
 disk.cylindrical_inner_rim = True
 disk.cylindrical_outer_rim = True
 
-# Dust:
-#
-# Spherical grains, 1 micron, 3.5g/cm^3
-
-disk.dust = SphericalDust('dust/pinte_dust.hdf5')
+disk.dust = SphericalDust(DUST_FILE)
 
 add_sed(m)
 
@@ -71,6 +67,4 @@ m.set_n_photons(**settings['n_photons'])
 
 m.set_max_interactions(10000000)
 
-set_output(m)
-
-m.write(snakemake.output[0])
+write(m, snakemake.output[0])

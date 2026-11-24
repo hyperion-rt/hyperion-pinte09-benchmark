@@ -7,7 +7,7 @@ import numpy as np
 
 from hyperion.util.constants import au
 
-from common import model_from_temperatures, set_optical_depth_limits
+from common import model_from_temperatures, set_optical_depth_limits, write
 
 settings = snakemake.params.settings
 
@@ -45,4 +45,4 @@ m.set_pda(True)
 m.set_n_photons(**settings['n_photons'])
 m.set_max_interactions(10000)
 
-m.write(snakemake.output[0])
+write(m, snakemake.output[0])

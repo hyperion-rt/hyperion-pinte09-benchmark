@@ -93,6 +93,9 @@ rule setup_sed_binned:
         "scripts/setup_sed_binned.py"
 
 
+# Hyperion is run from the directory containing the input file, since the
+# output file links to the input file using the path given on the command
+# line, and the link then works from any directory
 rule run_hyperion:
     input:
         RUN + "/{kind}/tau{tau}.rtin",
@@ -104,7 +107,9 @@ rule run_hyperion:
     resources:
         mpi_jobs=1,
     shell:
-        "mpirun -n {threads} hyperion_{wildcards.geometry}_mpi {input} {output} > {log} 2>&1"
+        "cd $(dirname {input}) && "
+        "mpirun -n {threads} hyperion_{wildcards.geometry}_mpi "
+        "$(basename {input}) $(basename {output}) > $(basename {log}) 2>&1"
 
 
 rule plot_seds:
