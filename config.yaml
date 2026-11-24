@@ -10,6 +10,14 @@ mpi_processes: all
 # Settings that control the cost of the runs. The profile to use is selected
 # on the command line with e.g. --config profile=fast, and defaults to full.
 #
+# In each profile, models gives the settings for the models, which compute the
+# temperatures and the SEDs at the benchmark wavelengths in monochromatic
+# mode, and images those for the images at 1 micron. binned gives the numbers
+# of photons for computing the SEDs of each model a second time in the normal
+# (non-monochromatic) mode, re-using the temperatures, with the SEDs binned in
+# wavelength and interpolated to the benchmark wavelengths. The number of
+# imaging photons for these is the total over all wavelengths.
+#
 # In each profile, optical_depth_limits sets three options that make the
 # imaging much faster in these very optically thick models, and that are
 # ignored with versions of Hyperion that do not support them (before v1.0.0b2):
@@ -57,6 +65,12 @@ profiles:
         raytracing_sources: 10_000_000
         raytracing_dust: 10_000_000
         stats: 100_000
+    binned:
+      n_photons:
+        imaging: 300_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 1_000_000
 
   # Much cheaper settings for checking a version of Hyperion, with ten times
   # fewer photons for the temperature calculation and many fewer photons for
@@ -87,6 +101,12 @@ profiles:
         raytracing_sources: 100_000_000
         raytracing_dust: 100_000_000
         stats: 50_000
+    binned:
+      n_photons:
+        imaging: 30_000_000
+        raytracing_sources: 100_000_000
+        raytracing_dust: 100_000_000
+        stats: 50_000
 
   # Much cheaper settings (around 40 seconds per model on 8 cores) that are only
   # intended to check that the whole workflow runs. The results are noisy and
@@ -113,4 +133,10 @@ profiles:
         imaging_dust: 100_000
         raytracing_sources: 20_000
         raytracing_dust: 20_000
+        stats: 100_000
+    binned:
+      n_photons:
+        imaging: 50_000
+        raytracing_sources: 5_000
+        raytracing_dust: 5_000
         stats: 100_000

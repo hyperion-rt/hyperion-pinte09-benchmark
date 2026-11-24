@@ -6,6 +6,14 @@ benchmark with the [Hyperion](http://www.hyperion-rt.org) radiative transfer
 code, and to compare the resulting temperatures, SEDs and images to the
 results from the other codes in `benchmark/`.
 
+The benchmark defines the SEDs at specific wavelengths, so the SEDs are
+computed in Hyperion's monochromatic mode (plotted in `seds.png`). The SEDs of
+each model are also computed a second time in the normal (non-monochromatic)
+mode, re-using the temperatures, with the SEDs binned in wavelength and
+interpolated to the benchmark wavelengths (plotted in `seds_binned.png`), to
+check that this mode also agrees with the other codes. The images are only
+computed in monochromatic mode.
+
 ## Requirements
 
 - The Hyperion Python package and the MPI versions of the Fortran binaries
@@ -38,7 +46,8 @@ To run the full benchmark:
     snakemake
 
 This is very expensive: there are ten models (four optical depths and one
-image model for each of the spherical and cylindrical polar grids), and with
+image model for each of the spherical and cylindrical polar grids), as well
+as a run to compute the binned SEDs for each of the eight models, and with
 v1.0.0b2 the full profile would take of order tens of thousands of CPU hours in
 total, almost all of it in the dust photons for the SEDs. The numbers of
 photons in this profile are the ones used for the published results, which
@@ -50,10 +59,11 @@ calculation and many fewer photons for the SEDs and images:
 
     snakemake --config profile=reduced
 
-With v1.0.0b2 this takes of order 400 CPU hours in total (about 13 hours on 32
-cores), at the cost of noisier SEDs at mid-infrared wavelengths for the most
-edge-on viewing angle of the most optically thick model. The results are
-written to a separate directory ending in `_reduced`.
+With v1.0.0b2 the models and images take of order 400 CPU hours in total
+(about 13 hours on 32 cores), at the cost of noisier SEDs at mid-infrared
+wavelengths for the most edge-on viewing angle of the most optically thick
+model, and the binned SEDs are expected to add a similar amount. The results
+are written to a separate directory ending in `_reduced`.
 
 A subset of the results can be requested by giving the files to produce, for
 example:
@@ -103,7 +113,8 @@ explicitly remade after changing one of the plotting scripts. None of the
 following re-run the models, provided that the model output is already there.
 
 To remake one kind of plot for both grid geometries, force the rule that makes
-it, which is one of `plot_seds`, `plot_temperatures` or `plot_images`:
+it, which is one of `plot_seds`, `plot_seds_binned`, `plot_temperatures` or
+`plot_images`:
 
     snakemake --forcerun plot_seds
 

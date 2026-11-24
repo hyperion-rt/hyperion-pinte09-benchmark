@@ -38,7 +38,7 @@ FORMATS = ["png", "pdf"]
 
 wildcard_constraints:
     geometry="sph|cyl",
-    kind="models|models_images",
+    kind="models|models_images|models_binned",
     tau=r"1e\+0[3-6]",
 
 
@@ -47,7 +47,7 @@ rule all:
         expand(
             PLOTS + "/{plot}.{ext}",
             geometry=GEOMETRIES,
-            plot=["seds", "temperatures", "images_I", "images_linpol"],
+            plot=["seds", "seds_binned", "temperatures", "images_I", "images_linpol"],
             ext=FORMATS,
         ),
 
@@ -78,6 +78,21 @@ rule setup_image:
         "scripts/setup_image.py"
 
 
+# The SEDs are also computed in the normal (non-monochromatic) mode for each
+# model, re-using the temperatures from the model
+rule setup_sed_binned:
+    input:
+        model=RUN + "/models/tau{tau}.rtout",
+        wavelengths="benchmark/data/wavelength_points.txt",
+    output:
+        RUN + "/models_binned/tau{tau}.rtin",
+    params:
+        settings=SETTINGS["binned"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
+    script:
+        "scripts/setup_sed_binned.py"
+
+
 rule run_hyperion:
     input:
         RUN + "/{kind}/tau{tau}.rtin",
@@ -102,6 +117,18 @@ rule plot_seds:
         plots=PLOTS,
     shell:
         "python scripts/plot_seds.py {params.run} {params.plots}"
+
+
+rule plot_seds_binned:
+    input:
+        expand(RUN + "/models_binned/tau{tau}.rtout", tau=TAUS, allow_missing=True),
+    output:
+        expand(PLOTS + "/seds_binned.{ext}", ext=FORMATS, allow_missing=True),
+    params:
+        run=RUN,
+        plots=PLOTS,
+    shell:
+        "python scripts/plot_seds.py {params.run} {params.plots} models_binned"
 
 
 rule plot_temperatures:
