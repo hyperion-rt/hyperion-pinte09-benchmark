@@ -4,6 +4,8 @@ for the Pinte et al. (2009) benchmark. Snakemake adds the directory of each
 script to the module search path, so these can be imported directly.
 """
 
+import inspect
+
 import numpy as np
 
 from hyperion.model import Model
@@ -100,4 +102,6 @@ def set_optical_depth_limits(m, limits):
     if hasattr(m, 'set_compute_escape_column_density'):
         m.set_compute_escape_column_density(True, rays_per_cell=limits['escape_rays_per_cell'])
         monochromatic_kwargs['emission_max_escape_optical_depth'] = limits['emission_max_escape_optical_depth']
+    if 'emission_sampling_exponent' in inspect.signature(m.set_monochromatic).parameters:
+        monochromatic_kwargs['emission_sampling_exponent'] = limits['emission_sampling_exponent']
     return monochromatic_kwargs

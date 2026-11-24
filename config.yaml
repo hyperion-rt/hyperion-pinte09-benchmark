@@ -18,7 +18,7 @@ mpi_processes: all
 # wavelength and interpolated to the benchmark wavelengths. The number of
 # imaging photons for these is the total over all wavelengths.
 #
-# In each profile, optical_depth_limits sets three options that make the
+# In each profile, optical_depth_limits sets four options that make the
 # imaging much faster in these very optically thick models, and that are
 # ignored with versions of Hyperion that do not support them (before v1.0.0b2):
 #
@@ -40,6 +40,15 @@ mpi_processes: all
 #   excluded cells could only contribute after scattering outwards through a
 #   large optical depth, so this should be sufficiently larger than
 #   max_peeloff_optical_depth (twice as large is enough here).
+#
+# - emission_sampling_exponent: in monochromatic mode, dust photons are
+#   emitted from cells chosen with a probability proportional to their
+#   emission raised to this power (1 being in proportion to the emission),
+#   with weights that keep the results unbiased. In edge-on views, much of the
+#   flux comes from cells with low emission, which are rarely chosen with the
+#   default sampling, and in tests with the most optically thick model a value
+#   of 0.5 (together with emission_max_escape_optical_depth) gave the lowest
+#   noise overall at near- and mid-infrared wavelengths for a given cost.
 profiles:
 
   # The settings used for the published benchmark results.
@@ -48,6 +57,7 @@ profiles:
       max_peeloff_optical_depth: 100
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
     models:
       grid: [399, 299]
       n_initial_iterations: 10
@@ -84,6 +94,7 @@ profiles:
       max_peeloff_optical_depth: 100
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
     models:
       grid: [399, 299]
       n_initial_iterations: 10
@@ -117,6 +128,7 @@ profiles:
       max_peeloff_optical_depth: 100
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
     models:
       grid: [99, 79]
       n_initial_iterations: 2
