@@ -1,6 +1,6 @@
 # Label for the Hyperion version being benchmarked. This is only used to name
 # the output directory, e.g. 0.9.12 (or 0.9.12_fast for the fast profile).
-version: "0.9.12"
+version: "v1.0.0b2"
 
 # Number of MPI processes to use for each Hyperion run. This can be a number,
 # or "all" to use all the cores available to Snakemake, which is all the cores
@@ -9,10 +9,55 @@ mpi_processes: all
 
 # Settings that control the cost of the runs. The profile to use is selected
 # on the command line with e.g. --config profile=fast, and defaults to full.
+#
+# In each profile, models gives the settings for the models, which compute the
+# temperatures and the SEDs at the benchmark wavelengths in monochromatic
+# mode, and images those for the images at 1 micron. binned gives the numbers
+# of photons for computing the SEDs of each model a second time in the normal
+# (non-monochromatic) mode, re-using the temperatures, with the SEDs binned in
+# wavelength and interpolated to the benchmark wavelengths. The number of
+# imaging photons for these is the total over all wavelengths.
+#
+# In each profile, optical_depth_limits sets four options that make the
+# imaging much faster in these very optically thick models, and that are
+# ignored with versions of Hyperion that do not support them (before v1.0.0b2):
+#
+# - max_peeloff_optical_depth: the optical depth beyond which the optical
+#   depth is no longer integrated for peeled photons, since their contribution
+#   is then negligible (attenuated by more than exp(-100) for 100).
+#
+# - escape_rays_per_cell: the average number of rays started in each cell to
+#   estimate the minimum column density to escape the grid from each cell.
+#   Photons in cells where the minimum optical depth to escape is larger than
+#   max_peeloff_optical_depth are then not peeled off at all.
+#
+# - emission_max_escape_optical_depth: dust photons are not emitted from cells
+#   where the minimum optical depth to escape at the wavelength being computed
+#   is larger than this. In the most optically thick models, most of the dust
+#   emission at near- and mid-infrared wavelengths comes from cells in the
+#   midplane that photons cannot escape from, so this greatly improves the
+#   signal-to-noise for a given number of photons. Photons emitted in the
+#   excluded cells could only contribute after scattering outwards through a
+#   large optical depth, so this should be sufficiently larger than
+#   max_peeloff_optical_depth (twice as large is enough here).
+#
+# - emission_sampling_exponent: in monochromatic mode, dust photons are
+#   emitted from cells chosen with a probability proportional to their
+#   emission raised to this power (1 being in proportion to the emission),
+#   with weights that keep the results unbiased. In edge-on views, much of the
+#   flux comes from cells with low emission, which are rarely chosen with the
+#   default sampling, and in tests with the most optically thick model a value
+#   of 0.5 (together with emission_max_escape_optical_depth) gave the lowest
+#   noise overall at near- and mid-infrared wavelengths for a given cost.
 profiles:
 
   # The settings used for the published benchmark results.
   full:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
     models:
       grid: [399, 299]
       n_initial_iterations: 10
@@ -30,12 +75,60 @@ profiles:
         raytracing_sources: 10_000_000
         raytracing_dust: 10_000_000
         stats: 100_000
+    binned:
+      n_photons:
+        imaging: 300_000_000
+        raytracing_sources: 10_000_000
+        raytracing_dust: 10_000_000
+        stats: 1_000_000
+
+  # Much cheaper settings for checking a version of Hyperion, with ten times
+  # fewer photons for the temperature calculation and many fewer photons for
+  # the SEDs and images than the full profile. This is only possible because
+  # of the optical depth limits (in particular emission_max_escape_optical_depth),
+  # so with older versions of Hyperion the results are much noisier. Even so,
+  # the SEDs are noticeably noisier at mid-infrared wavelengths for the most
+  # edge-on viewing angle of the most optically thick model.
+  reduced:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
+    models:
+      grid: [399, 299]
+      n_initial_iterations: 10
+      n_photons:
+        initial: 10_000_000
+        imaging_sources: 1_000_000
+        imaging_dust: 1_000_000
+        raytracing_sources: 100_000_000
+        raytracing_dust: 100_000_000
+        stats: 50_000
+    images:
+      n_photons:
+        imaging_sources: 1_000_000
+        imaging_dust: 1_000_000
+        raytracing_sources: 100_000_000
+        raytracing_dust: 100_000_000
+        stats: 50_000
+    binned:
+      n_photons:
+        imaging: 30_000_000
+        raytracing_sources: 100_000_000
+        raytracing_dust: 100_000_000
+        stats: 50_000
 
   # Much cheaper settings (around 40 seconds per model on 8 cores) that are only
   # intended to check that the whole workflow runs. The results are noisy and
   # the temperatures are not converged, so they should not be used to judge
   # the agreement with the other codes.
   fast:
+    optical_depth_limits:
+      max_peeloff_optical_depth: 100
+      escape_rays_per_cell: 100
+      emission_max_escape_optical_depth: 200
+      emission_sampling_exponent: 0.5
     models:
       grid: [99, 79]
       n_initial_iterations: 2
@@ -52,4 +145,10 @@ profiles:
         imaging_dust: 100_000
         raytracing_sources: 20_000
         raytracing_dust: 20_000
+        stats: 100_000
+    binned:
+      n_photons:
+        imaging: 50_000
+        raytracing_sources: 5_000
+        raytracing_dust: 5_000
         stats: 100_000

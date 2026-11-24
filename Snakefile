@@ -38,7 +38,7 @@ FORMATS = ["png", "pdf"]
 
 wildcard_constraints:
     geometry="sph|cyl",
-    kind="models|models_images",
+    kind="models|models_images|models_binned",
     tau=r"1e\+0[3-6]",
 
 
@@ -47,7 +47,7 @@ rule all:
         expand(
             PLOTS + "/{plot}.{ext}",
             geometry=GEOMETRIES,
-            plot=["seds", "temperatures", "images_I", "images_linpol"],
+            plot=["seds", "seds_binned", "temperatures", "images_I", "images_linpol"],
             ext=FORMATS,
         ),
 
@@ -60,8 +60,9 @@ rule setup_model:
         RUN + "/models/tau{tau}.rtin",
     params:
         settings=SETTINGS["models"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
-        "scripts/setup_{wildcards.geometry}.py"
+        "scripts/setup_model.py"
 
 
 # The image models re-use the temperatures from the most optically thick model
@@ -72,10 +73,29 @@ rule setup_image:
         RUN + "/models_images/tau1e+06.rtin",
     params:
         settings=SETTINGS["images"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
     script:
-        "scripts/setup_image_{wildcards.geometry}.py"
+        "scripts/setup_image.py"
 
 
+# The SEDs are also computed in the normal (non-monochromatic) mode for each
+# model, re-using the temperatures from the model
+rule setup_sed_binned:
+    input:
+        model=RUN + "/models/tau{tau}.rtout",
+        wavelengths="benchmark/data/wavelength_points.txt",
+    output:
+        RUN + "/models_binned/tau{tau}.rtin",
+    params:
+        settings=SETTINGS["binned"],
+        optical_depth_limits=SETTINGS["optical_depth_limits"],
+    script:
+        "scripts/setup_sed_binned.py"
+
+
+# Hyperion is run from the directory containing the input file, since the
+# output file links to the input file using the path given on the command
+# line, and the link then works from any directory
 rule run_hyperion:
     input:
         RUN + "/{kind}/tau{tau}.rtin",
@@ -87,7 +107,9 @@ rule run_hyperion:
     resources:
         mpi_jobs=1,
     shell:
-        "mpirun -n {threads} hyperion_{wildcards.geometry}_mpi {input} {output} > {log} 2>&1"
+        "cd $(dirname {input}) && "
+        "mpirun -n {threads} hyperion_{wildcards.geometry}_mpi "
+        "$(basename {input}) $(basename {output}) > $(basename {log}) 2>&1"
 
 
 rule plot_seds:
@@ -100,6 +122,18 @@ rule plot_seds:
         plots=PLOTS,
     shell:
         "python scripts/plot_seds.py {params.run} {params.plots}"
+
+
+rule plot_seds_binned:
+    input:
+        expand(RUN + "/models_binned/tau{tau}.rtout", tau=TAUS, allow_missing=True),
+    output:
+        expand(PLOTS + "/seds_binned.{ext}", ext=FORMATS, allow_missing=True),
+    params:
+        run=RUN,
+        plots=PLOTS,
+    shell:
+        "python scripts/plot_seds.py {params.run} {params.plots} models_binned"
 
 
 rule plot_temperatures:

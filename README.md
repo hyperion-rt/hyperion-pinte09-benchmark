@@ -6,6 +6,14 @@ benchmark with the [Hyperion](http://www.hyperion-rt.org) radiative transfer
 code, and to compare the resulting temperatures, SEDs and images to the
 results from the other codes in `benchmark/`.
 
+The benchmark defines the SEDs at specific wavelengths, so the SEDs are
+computed in Hyperion's monochromatic mode (plotted in `seds.png`). The SEDs of
+each model are also computed a second time in the normal (non-monochromatic)
+mode, re-using the temperatures, with the SEDs binned in wavelength and
+interpolated to the benchmark wavelengths (plotted in `seds_binned.png`), to
+check that this mode also agrees with the other codes. The images are only
+computed in monochromatic mode.
+
 ## Requirements
 
 - The Hyperion Python package and the MPI versions of the Fortran binaries
@@ -27,9 +35,9 @@ seconds per model on 8 cores:
     snakemake --config profile=fast
 
 All the output is written to a directory named after the version, with the
-plots for each grid geometry in e.g. `0.9.12/sph/plots`. The fast results are
+plots for each grid geometry in e.g. `v1.0.0b2/sph/plots`. The fast results are
 written to a separate directory ending in `_fast` (for example
-`0.9.12_fast`). They are noisy and the temperatures are not converged, so
+`v1.0.0b2_fast`). They are noisy and the temperatures are not converged, so
 they are only useful for testing the workflow and not for judging the
 agreement with the other codes.
 
@@ -37,14 +45,30 @@ To run the full benchmark:
 
     snakemake
 
-This is very expensive: the original runs took of order 350 CPU hours per
-model, and there are ten models (four optical depths and one image model for
-each of the spherical and cylindrical polar grids).
+This is very expensive: there are ten models (four optical depths and one
+image model for each of the spherical and cylindrical polar grids), as well
+as a run to compute the binned SEDs for each of the eight models, and with
+v1.0.0b2 the full profile would take of order tens of thousands of CPU hours in
+total, almost all of it in the dust photons for the SEDs. The numbers of
+photons in this profile are the ones used for the published results, which
+were computed with an earlier and much cheaper (but noisier) algorithm for
+the dust photons, so they are far more than are needed now.
+
+The reduced profile uses ten times fewer photons for the temperature
+calculation and many fewer photons for the SEDs and images:
+
+    snakemake --config profile=reduced
+
+With v1.0.0b2 the models and images take of order 400 CPU hours in total
+(about 13 hours on 32 cores), at the cost of noisier SEDs at mid-infrared
+wavelengths for the most edge-on viewing angle of the most optically thick
+model, and the binned SEDs are expected to add a similar amount. The results
+are written to a separate directory ending in `_reduced`.
 
 A subset of the results can be requested by giving the files to produce, for
 example:
 
-    snakemake 0.9.12/sph/plots/temperatures.png
+    snakemake v1.0.0b2/sph/plots/temperatures.png
 
 Any files to produce have to be given before `--config` on the command line.
 
@@ -64,7 +88,7 @@ other requirements, for example with [Podman](https://podman.io). The version
 of Hyperion to build is set with `HYPERION_REF`, which can be a tag, a branch
 or a commit, and defaults to `main`:
 
-    podman build --build-arg HYPERION_REF=v0.9.12 -t hyperion-benchmark:0.9.12 .
+    podman build --build-arg HYPERION_REF=v1.0.0b2 -t hyperion-benchmark:v1.0.0b2 .
 
 If `HYPERION_REF` is a branch, building again re-uses the previous build
 rather than picking up new commits, so in that case either add `--no-cache` or
@@ -75,7 +99,7 @@ The benchmark is not included in the image, so the repository has to be
 mounted when running the workflow, and the output is then written to the
 repository as usual:
 
-    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:0.9.12 \
+    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:v1.0.0b2 \
         snakemake --config profile=fast
 
 The `--shm-size` option is needed because the default amount of shared memory
@@ -89,14 +113,15 @@ explicitly remade after changing one of the plotting scripts. None of the
 following re-run the models, provided that the model output is already there.
 
 To remake one kind of plot for both grid geometries, force the rule that makes
-it, which is one of `plot_seds`, `plot_temperatures` or `plot_images`:
+it, which is one of `plot_seds`, `plot_seds_binned`, `plot_temperatures` or
+`plot_images`:
 
     snakemake --forcerun plot_seds
 
 To remake the plots for a single grid geometry, give one of the files and use
 `--force`:
 
-    snakemake 0.9.12/sph/plots/seds.png --force
+    snakemake v1.0.0b2/sph/plots/seds.png --force
 
 Alternatively, delete the plots to remake and run `snakemake` again, which
 only produces the files that are missing.
