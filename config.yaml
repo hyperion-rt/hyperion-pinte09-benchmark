@@ -52,7 +52,10 @@ mpi_processes: all
 #   noise overall at near- and mid-infrared wavelengths for a given cost.
 profiles:
 
-  # The settings used for the published benchmark results.
+  # The same settings as the reduced profile but with ten times as many photons
+  # for everything, which reduces the noise by a factor of about three and
+  # takes of order a week on 32 cores with v1.0.0b2. The published results used
+  # different numbers of photons, chosen for earlier versions of Hyperion.
   full:
     optical_depth_limits:
       max_peeloff_optical_depth: 100
@@ -67,31 +70,32 @@ profiles:
     seds_monochromatic:
       n_photons:
         imaging_sources: 10_000_000
-        imaging_dust: 200_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 1_000_000
+        imaging_dust: 10_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
     seds_binned:
       n_photons:
         imaging: 300_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 1_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
     images:
       n_photons:
         imaging_sources: 1_000_000_000
-        imaging_dust: 20_000_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 100_000
+        imaging_dust: 100_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
 
   # Much cheaper settings for checking a version of Hyperion, with ten times
-  # fewer photons for the temperature calculation and many fewer photons for
-  # the SEDs and images than the full profile. This is only possible because
-  # of the optical depth limits (in particular emission_max_escape_optical_depth),
-  # so with older versions of Hyperion the results are much noisier. Even so,
-  # the SEDs are noticeably noisier at mid-infrared wavelengths for the most
-  # edge-on viewing angle of the most optically thick model.
+  # fewer photons than the full profile for everything, which takes about 17
+  # hours on 32 cores with v1.0.0b2. This is only possible because of the
+  # optical depth limits (in particular emission_max_escape_optical_depth and
+  # emission_sampling_exponent), so with older versions of Hyperion the results
+  # are much noisier. Even so, the SEDs are noticeably noisier at mid-infrared
+  # wavelengths for the most edge-on viewing angle of the most optically thick
+  # model.
   reduced:
     optical_depth_limits:
       max_peeloff_optical_depth: 100

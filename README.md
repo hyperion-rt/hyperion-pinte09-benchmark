@@ -46,27 +46,28 @@ To run the full benchmark:
 
     snakemake
 
-This is very expensive: for each of the spherical and cylindrical polar
-grids, there are four models (one for each optical depth), each of which has
-a run to compute the monochromatic SEDs and one to compute the binned SEDs,
-and one run to compute the images, and with v1.0.0b2 the full profile would take of order tens of thousands of CPU hours in
-total, almost all of it in the dust photons for the SEDs. The numbers of
-photons in this profile are the ones used for the published results, which
-were computed with an earlier and much cheaper (but noisier) algorithm for
-the dust photons, so they are far more than are needed now.
+For each of the spherical and cylindrical polar grids, there are four models
+(one for each optical depth), each of which has a run to compute the
+temperatures, one to compute the monochromatic SEDs and one to compute the
+binned SEDs, as well as one run to compute the images. With v1.0.0b2 the full
+profile takes of order 5,400 CPU hours (about a week on 32 cores). The
+numbers of photons in this profile are not the ones used for the published
+results, which were chosen for an earlier and much cheaper (but noisier)
+algorithm for the dust photons.
 
-The reduced profile uses ten times fewer photons for the temperature
-calculation and many fewer photons for the SEDs and images:
+The reduced profile uses ten times fewer photons than the full profile for
+everything:
 
     snakemake --config profile=reduced
 
 With v1.0.0b2 this takes about 540 CPU hours in total (about 17 hours on 32
 cores): about 40 for the temperatures, 270 for the monochromatic SEDs, 200 for
-the binned SEDs and 30 for the images. The SEDs are noisier at mid-infrared wavelengths for the most edge-on
-viewing angle of the most optically thick model than with the full profile.
-The images use enough photons from the star that the noise in the
-polarization maps is comparable to the differences between the other codes.
-The results are written to a separate directory ending in `_reduced`.
+the binned SEDs and 30 for the images. The SEDs are noisier at mid-infrared
+wavelengths for the most edge-on viewing angle of the most optically thick
+model than with the full profile. The images use enough photons from the star
+that the noise in the polarization maps is comparable to the differences
+between the other codes. The results are written to a separate directory
+ending in `_reduced`.
 
 A subset of the results can be requested by giving the files to produce, for
 example:

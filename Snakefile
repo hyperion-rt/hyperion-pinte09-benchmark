@@ -38,7 +38,7 @@ FORMATS = ["png", "pdf"]
 
 wildcard_constraints:
     geometry="sph|cyl",
-    kind="models|models_images|seds_monochromatic|seds_binned",
+    kind="models_temperatures|models_images|models_seds_monochromatic|models_seds_binned",
     tau=r"1e\+0[3-6]",
 
 
@@ -57,7 +57,7 @@ rule setup_temperatures:
     input:
         dust="dust/pinte_dust.hdf5",
     output:
-        RUN + "/models/tau{tau}.rtin",
+        RUN + "/models_temperatures/tau{tau}.rtin",
     params:
         settings=SETTINGS["temperatures"],
     script:
@@ -68,10 +68,10 @@ rule setup_temperatures:
 # each model, re-using the temperatures from the model
 rule setup_sed_monochromatic:
     input:
-        model=RUN + "/models/tau{tau}.rtout",
+        model=RUN + "/models_temperatures/tau{tau}.rtout",
         wavelengths="benchmark/data/wavelength_points.txt",
     output:
-        RUN + "/seds_monochromatic/tau{tau}.rtin",
+        RUN + "/models_seds_monochromatic/tau{tau}.rtin",
     params:
         settings=SETTINGS["seds_monochromatic"],
         optical_depth_limits=SETTINGS["optical_depth_limits"],
@@ -82,7 +82,7 @@ rule setup_sed_monochromatic:
 # The image models re-use the temperatures from the most optically thick model
 rule setup_image:
     input:
-        model=RUN + "/models/tau1e+06.rtout",
+        model=RUN + "/models_temperatures/tau1e+06.rtout",
     output:
         RUN + "/models_images/tau1e+06.rtin",
     params:
@@ -96,10 +96,10 @@ rule setup_image:
 # model, re-using the temperatures from the model
 rule setup_sed_binned:
     input:
-        model=RUN + "/models/tau{tau}.rtout",
+        model=RUN + "/models_temperatures/tau{tau}.rtout",
         wavelengths="benchmark/data/wavelength_points.txt",
     output:
-        RUN + "/seds_binned/tau{tau}.rtin",
+        RUN + "/models_seds_binned/tau{tau}.rtin",
     params:
         settings=SETTINGS["seds_binned"],
         optical_depth_limits=SETTINGS["optical_depth_limits"],
@@ -128,31 +128,31 @@ rule run_hyperion:
 
 rule plot_seds:
     input:
-        expand(RUN + "/seds_monochromatic/tau{tau}.rtout", tau=TAUS, allow_missing=True),
+        expand(RUN + "/models_seds_monochromatic/tau{tau}.rtout", tau=TAUS, allow_missing=True),
     output:
         expand(PLOTS + "/seds.{ext}", ext=FORMATS, allow_missing=True),
     params:
         run=RUN,
         plots=PLOTS,
     shell:
-        "python scripts/plot_seds.py {params.run} {params.plots} seds_monochromatic"
+        "python scripts/plot_seds.py {params.run} {params.plots} models_seds_monochromatic"
 
 
 rule plot_seds_binned:
     input:
-        expand(RUN + "/seds_binned/tau{tau}.rtout", tau=TAUS, allow_missing=True),
+        expand(RUN + "/models_seds_binned/tau{tau}.rtout", tau=TAUS, allow_missing=True),
     output:
         expand(PLOTS + "/seds_binned.{ext}", ext=FORMATS, allow_missing=True),
     params:
         run=RUN,
         plots=PLOTS,
     shell:
-        "python scripts/plot_seds.py {params.run} {params.plots} seds_binned"
+        "python scripts/plot_seds.py {params.run} {params.plots} models_seds_binned"
 
 
 rule plot_temperatures:
     input:
-        expand(RUN + "/models/tau{tau}.rtout", tau=["1e+03", "1e+06"], allow_missing=True),
+        expand(RUN + "/models_temperatures/tau{tau}.rtout", tau=["1e+03", "1e+06"], allow_missing=True),
     output:
         expand(PLOTS + "/temperatures.{ext}", ext=FORMATS, allow_missing=True),
     params:
