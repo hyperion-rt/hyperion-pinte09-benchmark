@@ -50,7 +50,7 @@ artists = []
 for tau in ['1e3','1e6']:
 
     # Get Hyperion results
-    m = ModelOutput(prefix + '/models/tau%3.0e.rtout' % float(tau))
+    m = ModelOutput(prefix + '/models_temperatures/tau%3.0e.rtout' % float(tau))
     grid = m.get_quantities()
     temperature = grid['temperature'][0].array[0,:,:]
 

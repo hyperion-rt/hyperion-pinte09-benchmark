@@ -9,6 +9,7 @@ import inspect
 import numpy as np
 
 from hyperion.model import Model
+from hyperion.util import functions
 from hyperion.util.constants import rsun, pi, sigma, au
 
 # Star:
@@ -49,6 +50,23 @@ def set_star(star):
     star.luminosity = STAR_LUMINOSITY
 
 
+def can_link_quantities():
+    """
+    Whether the density and temperatures of a model can be linked to rather
+    than copied into the input files of the runs that re-use them. Older
+    versions of Hyperion follow each link after creating it, which opens the
+    linked file in read/write mode since the input file is open for writing.
+    This fails if another run being set up at the same time has the file
+    open, and modifies the output files of Hyperion, which would make
+    Snakemake re-run the runs that use them, so the quantities are copied
+    with these versions.
+    """
+    try:
+        return 'Linking failed' not in inspect.getsource(functions.link_or_copy)
+    except (OSError, TypeError):
+        return False
+
+
 def model_from_temperatures(filename):
     """
     Set up a model with the geometry, density and temperatures of an
@@ -58,10 +76,13 @@ def model_from_temperatures(filename):
     m = Model()
     set_star(m.add_spherical_source())
     m.use_geometry(filename)
-    # The dust properties are taken from the dust file rather than from the
-    # existing run, so that they can be linked to rather than copied when
-    # writing the model (see write)
-    m.use_quantities(filename, use_dust=False)
+    # The density and temperatures are linked to rather than copied into the
+    # new input file if possible (see can_link_quantities), and the dust
+    # properties are taken from the dust file rather than from the existing
+    # run, so that they can be linked to rather than copied when writing the
+    # model (see write). The dust file is written by h5py rather than by
+    # Hyperion, so it is not modified when the link to it is followed.
+    m.use_quantities(filename, use_dust=False, copy=not can_link_quantities())
     m.dust = [DUST_FILE]
     m.set_n_initial_iterations(0)
     return m
@@ -76,8 +97,9 @@ def write(m, filename):
     dust properties make up almost all of the size of the files otherwise, so
     this keeps both the input and output files small enough to keep. Reading
     the grid and temperatures from the output files requires the input files,
-    and the dust file at the same location relative to them, which is the
-    case within this repository.
+    and the dust file and (for runs that re-use the temperatures of a model)
+    the files of that model at the same location relative to them, which is
+    the case within this repository.
     """
     m.set_copy_input(False)
     m.write(filename, copy=False)

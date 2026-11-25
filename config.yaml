@@ -1,6 +1,6 @@
 # Label for the Hyperion version being benchmarked. This is only used to name
-# the output directory, e.g. 0.9.12 (or 0.9.12_fast for the fast profile).
-version: "v1.0.0b2"
+# the output directory, e.g. v1.0.0b3 (or v1.0.0b3_fast for the fast profile).
+version: "v1.0.0b3"
 
 # Number of MPI processes to use for each Hyperion run. This can be a number,
 # or "all" to use all the cores available to Snakemake, which is all the cores
@@ -10,13 +10,14 @@ mpi_processes: all
 # Settings that control the cost of the runs. The profile to use is selected
 # on the command line with e.g. --config profile=fast, and defaults to full.
 #
-# In each profile, models gives the settings for the models, which compute the
-# temperatures and the SEDs at the benchmark wavelengths in monochromatic
-# mode, and images those for the images at 1 micron. binned gives the numbers
-# of photons for computing the SEDs of each model a second time in the normal
-# (non-monochromatic) mode, re-using the temperatures, with the SEDs binned in
-# wavelength and interpolated to the benchmark wavelengths. The number of
-# imaging photons for these is the total over all wavelengths.
+# In each profile, temperatures gives the settings for computing the
+# temperatures of each model. The other runs re-use these temperatures:
+# seds_monochromatic gives the numbers of photons for computing the SEDs at the
+# benchmark wavelengths in monochromatic mode, seds_binned for computing them
+# in the normal (non-monochromatic) mode, with the SEDs binned in wavelength
+# and interpolated to the benchmark wavelengths (the number of imaging photons
+# for these is the total over all wavelengths), and images for computing the
+# images at 1 micron (in monochromatic mode) for the most optically thick model.
 #
 # In each profile, optical_depth_limits sets four options that make the
 # imaging much faster in these very optically thick models, and that are
@@ -51,70 +52,78 @@ mpi_processes: all
 #   noise overall at near- and mid-infrared wavelengths for a given cost.
 profiles:
 
-  # The settings used for the published benchmark results.
+  # The same settings as the reduced profile but with ten times as many photons
+  # for everything, which reduces the noise by a factor of about three and
+  # takes of order a week on 32 cores with v1.0.0b3. The published results used
+  # different numbers of photons, chosen for earlier versions of Hyperion.
   full:
     optical_depth_limits:
       max_peeloff_optical_depth: 100
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
       emission_sampling_exponent: 0.5
-    models:
+    temperatures:
       grid: [399, 299]
       n_initial_iterations: 10
       n_photons:
         initial: 100_000_000
+    seds_monochromatic:
+      n_photons:
         imaging_sources: 10_000_000
-        imaging_dust: 200_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 1_000_000
+        imaging_dust: 10_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
+    seds_binned:
+      n_photons:
+        imaging: 300_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
     images:
       n_photons:
         imaging_sources: 1_000_000_000
-        imaging_dust: 20_000_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 100_000
-    binned:
-      n_photons:
-        imaging: 300_000_000
-        raytracing_sources: 10_000_000
-        raytracing_dust: 10_000_000
-        stats: 1_000_000
+        imaging_dust: 100_000_000
+        raytracing_sources: 1_000_000_000
+        raytracing_dust: 1_000_000_000
+        stats: 500_000
 
   # Much cheaper settings for checking a version of Hyperion, with ten times
-  # fewer photons for the temperature calculation and many fewer photons for
-  # the SEDs and images than the full profile. This is only possible because
-  # of the optical depth limits (in particular emission_max_escape_optical_depth),
-  # so with older versions of Hyperion the results are much noisier. Even so,
-  # the SEDs are noticeably noisier at mid-infrared wavelengths for the most
-  # edge-on viewing angle of the most optically thick model.
+  # fewer photons than the full profile for everything, which takes about 17
+  # hours on 32 cores with v1.0.0b3. This is only possible because of the
+  # optical depth limits (in particular emission_max_escape_optical_depth and
+  # emission_sampling_exponent), so with older versions of Hyperion the results
+  # are much noisier. Even so, the SEDs are noticeably noisier at mid-infrared
+  # wavelengths for the most edge-on viewing angle of the most optically thick
+  # model.
   reduced:
     optical_depth_limits:
       max_peeloff_optical_depth: 100
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
       emission_sampling_exponent: 0.5
-    models:
+    temperatures:
       grid: [399, 299]
       n_initial_iterations: 10
       n_photons:
         initial: 10_000_000
+    seds_monochromatic:
+      n_photons:
         imaging_sources: 1_000_000
         imaging_dust: 1_000_000
+        raytracing_sources: 100_000_000
+        raytracing_dust: 100_000_000
+        stats: 50_000
+    seds_binned:
+      n_photons:
+        imaging: 30_000_000
         raytracing_sources: 100_000_000
         raytracing_dust: 100_000_000
         stats: 50_000
     images:
       n_photons:
-        imaging_sources: 1_000_000
-        imaging_dust: 1_000_000
-        raytracing_sources: 100_000_000
-        raytracing_dust: 100_000_000
-        stats: 50_000
-    binned:
-      n_photons:
-        imaging: 30_000_000
+        imaging_sources: 100_000_000
+        imaging_dust: 10_000_000
         raytracing_sources: 100_000_000
         raytracing_dust: 100_000_000
         stats: 50_000
@@ -129,13 +138,21 @@ profiles:
       escape_rays_per_cell: 100
       emission_max_escape_optical_depth: 200
       emission_sampling_exponent: 0.5
-    models:
+    temperatures:
       grid: [99, 79]
       n_initial_iterations: 2
       n_photons:
         initial: 50_000
+    seds_monochromatic:
+      n_photons:
         imaging_sources: 500
         imaging_dust: 500
+        raytracing_sources: 5_000
+        raytracing_dust: 5_000
+        stats: 100_000
+    seds_binned:
+      n_photons:
+        imaging: 50_000
         raytracing_sources: 5_000
         raytracing_dust: 5_000
         stats: 100_000
@@ -145,10 +162,4 @@ profiles:
         imaging_dust: 100_000
         raytracing_sources: 20_000
         raytracing_dust: 20_000
-        stats: 100_000
-    binned:
-      n_photons:
-        imaging: 50_000
-        raytracing_sources: 5_000
-        raytracing_dust: 5_000
         stats: 100_000
