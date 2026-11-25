@@ -107,8 +107,8 @@ profiles:
         stats: 50_000
     images:
       n_photons:
-        imaging_sources: 1_000_000
-        imaging_dust: 1_000_000
+        imaging_sources: 100_000_000
+        imaging_dust: 10_000_000
         raytracing_sources: 100_000_000
         raytracing_dust: 100_000_000
         stats: 50_000

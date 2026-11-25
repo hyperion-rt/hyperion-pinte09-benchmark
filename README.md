@@ -59,11 +59,13 @@ calculation and many fewer photons for the SEDs and images:
 
     snakemake --config profile=reduced
 
-With v1.0.0b2 the models and images take of order 400 CPU hours in total
-(about 13 hours on 32 cores), at the cost of noisier SEDs at mid-infrared
-wavelengths for the most edge-on viewing angle of the most optically thick
-model, and the binned SEDs are expected to add a similar amount. The results
-are written to a separate directory ending in `_reduced`.
+With v1.0.0b2 this takes about 540 CPU hours in total (about 17 hours on 32
+cores): about 310 for the models, 30 for the images and 200 for the binned
+SEDs. The SEDs are noisier at mid-infrared wavelengths for the most edge-on
+viewing angle of the most optically thick model than with the full profile.
+The images use enough photons from the star that the noise in the
+polarization maps is comparable to the differences between the other codes.
+The results are written to a separate directory ending in `_reduced`.
 
 A subset of the results can be requested by giving the files to produce, for
 example:
