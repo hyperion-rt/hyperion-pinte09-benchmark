@@ -6,10 +6,11 @@ benchmark with the [Hyperion](http://www.hyperion-rt.org) radiative transfer
 code, and to compare the resulting temperatures, SEDs and images to the
 results from the other codes in `benchmark/`.
 
-The benchmark defines the SEDs at specific wavelengths, so the SEDs are
-computed in Hyperion's monochromatic mode (plotted in `seds.png`). The SEDs of
-each model are also computed a second time in the normal (non-monochromatic)
-mode, re-using the temperatures, with the SEDs binned in wavelength and
+The temperatures of each model are computed first, and the SEDs and images
+are then computed by separate runs that re-use these temperatures. The
+benchmark defines the SEDs at specific wavelengths, so the SEDs are computed in
+Hyperion's monochromatic mode (plotted in `seds.png`). They are also computed
+in the normal (non-monochromatic) mode, with the SEDs binned in wavelength and
 interpolated to the benchmark wavelengths (plotted in `seds_binned.png`), to
 check that this mode also agrees with the other codes. The images are only
 computed in monochromatic mode.
@@ -45,10 +46,10 @@ To run the full benchmark:
 
     snakemake
 
-This is very expensive: there are ten models (four optical depths and one
-image model for each of the spherical and cylindrical polar grids), as well
-as a run to compute the binned SEDs for each of the eight models, and with
-v1.0.0b2 the full profile would take of order tens of thousands of CPU hours in
+This is very expensive: for each of the spherical and cylindrical polar
+grids, there are four models (one for each optical depth), each of which has
+a run to compute the monochromatic SEDs and one to compute the binned SEDs,
+and one run to compute the images, and with v1.0.0b2 the full profile would take of order tens of thousands of CPU hours in
 total, almost all of it in the dust photons for the SEDs. The numbers of
 photons in this profile are the ones used for the published results, which
 were computed with an earlier and much cheaper (but noisier) algorithm for
@@ -60,8 +61,8 @@ calculation and many fewer photons for the SEDs and images:
     snakemake --config profile=reduced
 
 With v1.0.0b2 this takes about 540 CPU hours in total (about 17 hours on 32
-cores): about 310 for the models, 30 for the images and 200 for the binned
-SEDs. The SEDs are noisier at mid-infrared wavelengths for the most edge-on
+cores): about 40 for the temperatures, 270 for the monochromatic SEDs, 200 for
+the binned SEDs and 30 for the images. The SEDs are noisier at mid-infrared wavelengths for the most edge-on
 viewing angle of the most optically thick model than with the full profile.
 The images use enough photons from the star that the noise in the
 polarization maps is comparable to the differences between the other codes.
@@ -71,6 +72,8 @@ A subset of the results can be requested by giving the files to produce, for
 example:
 
     snakemake v1.0.0b2/sph/plots/temperatures.png
+
+which only computes the temperatures, the quickest way to check them.
 
 Any files to produce have to be given before `--config` on the command line.
 

@@ -1,9 +1,9 @@
 # Plot the SEDs of the four models against the results from the other codes.
 #
-# Usage: python plot_seds.py RUN_DIRECTORY PLOT_DIRECTORY [models|models_binned]
+# Usage: python plot_seds.py RUN_DIRECTORY PLOT_DIRECTORY [seds_monochromatic|seds_binned]
 #
-# By default this uses the monochromatic SEDs of the models. With
-# models_binned, it uses the SEDs computed in the normal (non-monochromatic)
+# By default this uses the SEDs computed in monochromatic mode. With
+# seds_binned, it uses the SEDs computed in the normal (non-monochromatic)
 # mode, which are binned in wavelength and are interpolated (in log-log space)
 # to the benchmark wavelengths, and the plots are written to seds_binned
 # instead of seds.
@@ -11,9 +11,9 @@
 import sys, os
 
 prefix, output = sys.argv[1:3]
-kind = sys.argv[3] if len(sys.argv) > 3 else 'models'
+kind = sys.argv[3] if len(sys.argv) > 3 else 'seds_monochromatic'
 
-if kind not in ('models', 'models_binned'):
+if kind not in ('seds_monochromatic', 'seds_binned'):
     raise Exception("Unknown kind of SED: %s" % kind)
 
 if not os.path.exists(prefix):
@@ -115,7 +115,7 @@ for i, tau in enumerate(tau_string):
 
         # Interpolate binned SEDs to the benchmark wavelengths (the bins with
         # no flux are left out)
-        if kind == 'models_binned':
+        if kind == 'seds_binned':
             keep = sed_hyperion > 0
             order = np.argsort(wav_hyperion[keep])
             sed_hyperion = np.exp(np.interp(np.log(wav_average),
@@ -176,7 +176,7 @@ for i, tau in enumerate(tau_string):
         ax2.yaxis.set_major_formatter(mpl.NullFormatter())
     ax2.text(0.975, 0.95, r'$\tau_{I}=10^%i$' % (i+3), ha='right', va='top', transform = ax2.transAxes, size='small')
 
-name = 'seds' if kind == 'models' else 'seds_binned'
+name = 'seds' if kind == 'seds_monochromatic' else 'seds_binned'
 fig.savefig('%s/%s.pdf' % (output, name), bbox_inches='tight', bbox_extra_artists=artists)
 fig.savefig('%s/%s.png' % (output, name), bbox_inches='tight', bbox_extra_artists=artists)
 
