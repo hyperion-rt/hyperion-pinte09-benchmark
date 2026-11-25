@@ -36,9 +36,9 @@ seconds per model on 8 cores:
     snakemake --config profile=fast
 
 All the output is written to a directory named after the version, with the
-plots for each grid geometry in e.g. `v1.0.0b2/sph/plots`. The fast results are
+plots for each grid geometry in e.g. `v1.0.0b3/sph/plots`. The fast results are
 written to a separate directory ending in `_fast` (for example
-`v1.0.0b2_fast`). They are noisy and the temperatures are not converged, so
+`v1.0.0b3_fast`). They are noisy and the temperatures are not converged, so
 they are only useful for testing the workflow and not for judging the
 agreement with the other codes.
 
@@ -49,7 +49,7 @@ To run the full benchmark:
 For each of the spherical and cylindrical polar grids, there are four models
 (one for each optical depth), each of which has a run to compute the
 temperatures, one to compute the monochromatic SEDs and one to compute the
-binned SEDs, as well as one run to compute the images. With v1.0.0b2 the full
+binned SEDs, as well as one run to compute the images. With v1.0.0b3 the full
 profile takes of order 5,400 CPU hours (about a week on 32 cores). The
 numbers of photons in this profile are not the ones used for the published
 results, which were chosen for an earlier and much cheaper (but noisier)
@@ -60,7 +60,7 @@ everything:
 
     snakemake --config profile=reduced
 
-With v1.0.0b2 this takes about 540 CPU hours in total (about 17 hours on 32
+With v1.0.0b3 this takes about 540 CPU hours in total (about 17 hours on 32
 cores): about 40 for the temperatures, 270 for the monochromatic SEDs, 200 for
 the binned SEDs and 30 for the images. The SEDs are noisier at mid-infrared
 wavelengths for the most edge-on viewing angle of the most optically thick
@@ -72,7 +72,7 @@ ending in `_reduced`.
 A subset of the results can be requested by giving the files to produce, for
 example:
 
-    snakemake v1.0.0b2/sph/plots/temperatures.png
+    snakemake v1.0.0b3/sph/plots/temperatures.png
 
 which only computes the temperatures, the quickest way to check them.
 
@@ -94,7 +94,7 @@ other requirements, for example with [Podman](https://podman.io). The version
 of Hyperion to build is set with `HYPERION_REF`, which can be a tag, a branch
 or a commit, and defaults to `main`:
 
-    podman build --build-arg HYPERION_REF=v1.0.0b2 -t hyperion-benchmark:v1.0.0b2 .
+    podman build --build-arg HYPERION_REF=v1.0.0b3 -t hyperion-benchmark:v1.0.0b3 .
 
 If `HYPERION_REF` is a branch, building again re-uses the previous build
 rather than picking up new commits, so in that case either add `--no-cache` or
@@ -105,7 +105,7 @@ The benchmark is not included in the image, so the repository has to be
 mounted when running the workflow, and the output is then written to the
 repository as usual:
 
-    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:v1.0.0b2 \
+    podman run --rm -it --shm-size=2g -v $PWD:/work:Z hyperion-benchmark:v1.0.0b3 \
         snakemake --config profile=fast
 
 The `--shm-size` option is needed because the default amount of shared memory
@@ -127,7 +127,7 @@ it, which is one of `plot_seds`, `plot_seds_binned`, `plot_temperatures` or
 To remake the plots for a single grid geometry, give one of the files and use
 `--force`:
 
-    snakemake v1.0.0b2/sph/plots/seds.png --force
+    snakemake v1.0.0b3/sph/plots/seds.png --force
 
 Alternatively, delete the plots to remake and run `snakemake` again, which
 only produces the files that are missing.
